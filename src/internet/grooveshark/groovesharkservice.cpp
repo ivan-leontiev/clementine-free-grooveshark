@@ -35,6 +35,8 @@
 #include <QNetworkRequest>
 #include <QPushButton>
 #include <QTimer>
+#include <QRegExp>
+#include <QUuid>
 
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
@@ -81,6 +83,8 @@ const char* GroovesharkService::kUrl = "http://api.grooveshark.com/ws/3.0/";
 const char* GroovesharkService::kUrlCover =
     "http://beta.grooveshark.com/static/amazonart/l";
 const char* GroovesharkService::kHomepage = "http://grooveshark.com/";
+const char* GroovesharkService::kPreloadUrl = "http://grooveshark.com/preload.php";
+const char* GroovesharkService::kMoreUrl = "http://grooveshark.com/more.php";
 
 const int GroovesharkService::kSongSearchLimit = 100;
 const int GroovesharkService::kSongSimpleSearchLimit = 10;
@@ -118,6 +122,7 @@ GroovesharkService::GroovesharkService(Application* app, InternetModel* parent)
       search_box_(new SearchBoxWidget(this)),
       search_delay_(new QTimer(this)),
       last_search_reply_(nullptr),
+      free_token_timer_(new QTimer),
       api_key_(QByteArray::fromBase64(kApiSecret)),
       login_state_(LoginState_OtherError),
       task_popular_id_(0),
@@ -147,6 +152,12 @@ GroovesharkService::GroovesharkService(Application* app, InternetModel* parent)
   int n = api_key_.length(), n2 = ba.length();
   for (int i = 0; i < n; i++) api_key_[i] = api_key_[i] ^ ba[i % n2];
 
+  free_token_timer_->setInterval(600 * 1000);
+  free_token_timer_->setSingleShot(false);
+
+  AuthenticateSessionFree();
+
+  connect(free_token_timer_, SIGNAL(timeout()), SLOT(AuthenticateSessionFree()));
   connect(search_box_, SIGNAL(TextChanged(QString)), SLOT(Search(QString)));
 }
 
@@ -324,19 +335,22 @@ QUrl GroovesharkService::GetStreamingUrlFromSongId(const QString& song_id,
   QList<Param> parameters;
 
   InitCountry();
-  parameters << Param("songID", song_id) << Param("country", country_);
-  QNetworkReply* reply = CreateRequest("getSubscriberStreamKey", parameters);
+  parameters << Param("songID", song_id) << Param("country", country_) << Param("prefetch", "false") << Param("type", 0) << Param("mobile", "false");
+//  QNetworkReply* reply = CreateRequest("getSubscriberStreamKey", parameters);
+  QNetworkReply* reply = CreateRequestFree("getStreamKeyFromSongIDEx", parameters);
 
   // Wait for the reply
   bool reply_has_timeouted = !WaitForReply(reply);
   reply->deleteLater();
   if (reply_has_timeouted) return QUrl();
 
+//  qLog(Debug) << "=========================" << reply->readAll();
   QVariantMap result = ExtractResult(reply);
+  qLog(Debug) << "=========================" << result;
   server_id->clear();
-  server_id->append(result["StreamServerID"].toString());
+  server_id->append(result["streamServerID"].toString());
   stream_key->clear();
-  stream_key->append(result["StreamKey"].toString());
+  stream_key->append(result["streamKey"].toString());
   *length_nanosec = result["uSecs"].toLongLong() * 1000;
   // Keep in mind that user has request to listen to this song
   last_songs_ids_.append(song_id.toInt());
@@ -345,7 +359,7 @@ QUrl GroovesharkService::GetStreamingUrlFromSongId(const QString& song_id,
   if (last_songs_ids_.size() > 100) last_songs_ids_.removeFirst();
   if (last_artists_ids_.size() > 100) last_artists_ids_.removeFirst();
 
-  return QUrl(result["url"].toString());
+  return QUrl("http://" + result["ip"].toString() + "/" + "stream.php?streamKey=" + result["streamKey"].toString());
 }
 
 void GroovesharkService::Login(const QString& username,
@@ -394,6 +408,46 @@ void GroovesharkService::AuthenticateSession() {
              SLOT(Authenticated(QNetworkReply*)), reply);
 }
 
+bool GroovesharkService::AuthenticateSessionFree() {
+  QUrl preload_url("http://grooveshark.com/preload.php?getCommunicationToken=1&hash=&" + QString::number(QDateTime::currentMSecsSinceEpoch()));
+//    QUrl preload_url(kPreloadUrl);
+//    preload_url.addQueryItem("CommunicationToken", "1");
+//    preload_url.addQueryItem("hash", "");
+//    preload_url.addQueryItem(QString::number(QDateTime::currentMSecsSinceEpoch()), "");
+//  url.setScheme("https");
+  QNetworkRequest req(preload_url);
+
+  QNetworkReply* reply = network_->get(req);
+  WaitForReply(reply);
+
+  QRegExp re("^window\\.tokenData = (.*\\});");
+
+  QByteArray bytes = reply->readAll();
+  QString str = QString::fromUtf8(bytes.data(), bytes.size());
+  if (re.indexIn(str) == -1) {
+      qLog(Debug) << "nothing found";
+      return false;
+  }
+
+  QJson::Parser parser;
+  bool ok;
+  QVariantMap result = parser.parse(re.cap(1).toUtf8(), &ok).toMap();
+  if (!ok) {
+    qLog(Error) << "Error while parsing===";
+    return false;
+  }
+
+  QVariantMap config = result["getGSConfig"].toMap();
+  free_session_ = config["sessionID"].toString();
+  QVariantMap free_country_ = config["country"].toMap();
+  free_token_ = result["getCommunicationToken"].toString();
+  free_uuid_ = QUuid::createUuid().toString();
+  qLog(Debug) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << session_id_ << free_session_ << free_token_ << free_uuid_.toUpper();
+  InitCountry();
+  free_token_timer_->start();
+  return true;
+}
+
 void GroovesharkService::Authenticated(QNetworkReply* reply) {
   reply->deleteLater();
 
@@ -404,9 +458,14 @@ void GroovesharkService::Authenticated(QNetworkReply* reply) {
     error = tr("Invalid username and/or password");
     login_state_ = LoginState_AuthFailed;
   } else if (!result["IsAnywhere"].toBool() || !result["IsPremium"].toBool()) {
-    error = tr("User %1 doesn't have a Grooveshark Anywhere account")
-                .arg(username_);
+//    error = tr("User %1 doesn't have a Grooveshark Anywhere account")
+//                .arg(username_);
+    qLog(Debug) << "=======================";
     login_state_ = LoginState_NoPremium;
+    emit LoginFinished(AuthenticateSessionFree());
+  } else {
+    login_state_ = LoginState_LoggedIn;
+    emit LoginFinished(true);
   }
   if (!error.isEmpty()) {
     QMessageBox::warning(nullptr, tr("Grooveshark login error"), error,
@@ -415,9 +474,7 @@ void GroovesharkService::Authenticated(QNetworkReply* reply) {
     emit LoginFinished(false);
     return;
   }
-  login_state_ = LoginState_LoggedIn;
   user_id_ = result["UserID"].toString();
-  emit LoginFinished(true);
   EnsureItemsCreated();
 }
 
@@ -1605,7 +1662,7 @@ void GroovesharkService::SongsRemovedFromLibrary(QNetworkReply* reply,
 
 QNetworkReply* GroovesharkService::CreateRequest(const QString& method_name,
                                                  const QList<Param>& params,
-                                                 bool use_https) {
+                                                 bool use_https, bool init) {
   QVariantMap request_params;
   request_params.insert("method", method_name);
 
@@ -1620,7 +1677,7 @@ QNetworkReply* GroovesharkService::CreateRequest(const QString& method_name,
   } else {
     header.insert("sessionID", session_id_);
   }
-  request_params.insert("header", header);
+  if (!init) request_params.insert("header", header);
 
   QVariantMap parameters;
   for (const Param& param : params) {
@@ -1647,6 +1704,63 @@ QNetworkReply* GroovesharkService::CreateRequest(const QString& method_name,
   }
 
   return reply;
+}
+
+QNetworkReply* GroovesharkService::CreateRequestFree(const QString& method_name,
+                                                 const QList<Param>& params,
+                                                 bool use_https) {
+  QVariantMap request_params;
+  request_params.insert("method", method_name);
+
+  QVariantMap header;
+  header.insert("client", "mobileshark");
+  header.insert("clientRevision", 20120830);
+  header.insert("country", free_country_);
+  header.insert("session", free_session_);
+  header.insert("uuid", free_uuid_.toUpper());
+  header.insert("token", CreateToken(method_name));
+  request_params.insert("header", header);
+
+  QVariantMap parameters;
+  for (const Param& param : params) {
+    parameters.insert(param.first, param.second);
+  }
+  request_params.insert("parameters", parameters);
+
+  QJson::Serializer serializer;
+  QByteArray post_params = serializer.serialize(request_params);
+
+  QUrl url("http://grooveshark.com/more.php?" + method_name);
+  if (use_https) {
+    url.setScheme("https");
+  }
+  QNetworkRequest req(url);
+  QNetworkReply* reply = network_->post(req, post_params);
+
+  if (use_https) {
+    connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
+            SLOT(RequestSslErrors(QList<QSslError>)));
+  }
+
+  return reply;
+}
+
+QByteArray GroovesharkService::CreateToken(QString method) {
+    auto randchar = []() -> char
+        {
+            const char charset[] = "0123456789abcdef";
+            const size_t max_index = (sizeof(charset) - 1);
+            return charset[ rand() % max_index ];
+        };
+    std::string str(6, 0);
+    std::generate_n( str.begin(), 6, randchar);
+    QString rnd(str.c_str());
+    QString salt = "gooeyFlubber";
+    QString plain = method + ":" + free_token_ + ":" + salt + ":" + rnd;
+    qLog(Debug) << plain;
+    QByteArray bytes = QCryptographicHash::hash(plain.toUtf8(), QCryptographicHash::Sha1).toHex();
+    qLog(Debug) << bytes << "----------------------------";
+    return rnd.toUtf8() + bytes;
 }
 
 void GroovesharkService::RequestSslErrors(const QList<QSslError>& errors) {

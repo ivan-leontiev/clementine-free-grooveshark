@@ -55,6 +55,8 @@ UrlHandler::LoadResult GroovesharkUrlHandler::StartLoading(const QUrl& url) {
     last_album_id_ = ids[1];
     last_song_id_ = ids[2];
 
+    qLog(Debug) << "---" << ids << "---";
+
     streaming_url = service_->GetStreamingUrlFromSongId(
         last_song_id_, last_artist_id_, &last_server_id_, &last_stream_key_,
         &length_nanosec);

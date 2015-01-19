@@ -159,6 +159,7 @@ class GroovesharkService : public InternetService {
   };
 
  private slots:
+  bool AuthenticateSessionFree();
   void SessionCreated(QNetworkReply* reply);
   void DoSearch();
   void SearchSongsFinished(QNetworkReply* reply);
@@ -226,6 +227,9 @@ class GroovesharkService : public InternetService {
   // If need_authentication is true, add session_id to params.
   // Returns the reply object created
   QNetworkReply* CreateRequest(const QString& method_name,
+                               const QList<QPair<QString, QVariant>>& params,
+                               bool use_https = false, bool init=false);
+  QNetworkReply* CreateRequestFree(const QString& method_name,
                                const QList<QPair<QString, QVariant>>& params,
                                bool use_https = false);
   // Convenient function which block until 'reply' replies, or timeout after 10
@@ -308,6 +312,11 @@ class GroovesharkService : public InternetService {
   QString password_;  // In fact, password's md5 hash
   QString user_id_;
   QString session_id_;
+  QString free_session_;
+  QString free_token_;
+  QString free_uuid_;
+  QMap<QString, QVariant> free_country_;
+  QTimer* free_token_timer_;
   QMap<QString, QVariant> country_;
   // The last artists and songs ids th users has listened to. Used for autoplay
   QList<int> last_artists_ids_;
@@ -325,6 +334,8 @@ class GroovesharkService : public InternetService {
   static const char* kUrl;
   static const char* kUrlCover;
   static const char* kHomepage;
+  static const char* kPreloadUrl;
+  static const char* kMoreUrl;
 
   static const int kSongSearchLimit;
   static const int kSongSimpleSearchLimit;
@@ -333,6 +344,7 @@ class GroovesharkService : public InternetService {
 
   static const char* kApiKey;
   static const char* kApiSecret;
+  QByteArray CreateToken(QString method);
 };
 
 #endif  // INTERNET_GROOVESHARK_GROOVESHARKSERVICE_H_
