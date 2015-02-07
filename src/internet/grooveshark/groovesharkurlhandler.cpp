@@ -74,11 +74,13 @@ void GroovesharkUrlHandler::TrackAboutToEnd() {
     timer_mark_stream_key_->stop();
     return;
   }
-  service_->MarkSongComplete(last_song_id_, last_stream_key_, last_server_id_);
+  //  service_->MarkSongComplete(last_song_id_, last_stream_key_,
+  //  last_server_id_);
 }
 
 void GroovesharkUrlHandler::TrackSkipped() { timer_mark_stream_key_->stop(); }
 
 void GroovesharkUrlHandler::MarkStreamKeyOver30Secs() {
-  service_->MarkStreamKeyOver30Secs(last_stream_key_, last_server_id_);
+  //  service_->MarkStreamKeyOver30Secs(last_stream_key_, last_server_id_,
+  //  last_song_id_);
 }

@@ -166,6 +166,7 @@ set(SOURCES
   internet/digitally/digitallyimportedsettingspage.cpp
   internet/digitally/digitallyimportedurlhandler.cpp
   internet/core/geolocator.cpp
+  internet/grooveshark/groovesharkclient.cpp
   internet/grooveshark/groovesharkradio.cpp
   internet/grooveshark/groovesharkservice.cpp
   internet/grooveshark/groovesharksettingspage.cpp
@@ -474,6 +475,7 @@ set(HEADERS
   internet/digitally/digitallyimportedservicebase.h
   internet/digitally/digitallyimportedsettingspage.h
   internet/core/geolocator.h
+  internet/grooveshark/groovesharkclient.h
   internet/grooveshark/groovesharkservice.h
   internet/grooveshark/groovesharksettingspage.h
   internet/grooveshark/groovesharkurlhandler.h

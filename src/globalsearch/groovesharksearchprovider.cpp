@@ -52,10 +52,9 @@ void GroovesharkSearchProvider::Init(GroovesharkService* service) {
 void GroovesharkSearchProvider::SearchAsync(int id, const QString& query) {
   const int service_id = service_->SimpleSearch(query);
   pending_searches_[service_id] = PendingState(id, TokenizeQuery(query));
-  ;
 
-  const int album_id = service_->SearchAlbums(query);
-  pending_searches_[album_id] = PendingState(id, TokenizeQuery(query));
+  //  const int album_id = service_->SearchAlbums(query);
+  //  pending_searches_[album_id] = PendingState(id, TokenizeQuery(query));
 }
 
 void GroovesharkSearchProvider::SearchDone(int id, const SongList& songs) {
@@ -84,9 +83,10 @@ void GroovesharkSearchProvider::AlbumSearchResult(
     MaybeSearchFinished(global_search_id);
     return;
   }
-  for (const quint64 album_id : albums_ids) {
-    pending_searches_[album_id] = PendingState(global_search_id, QStringList());
-  }
+  //  for (const quint64 album_id : albums_ids) {
+  //    pending_searches_[album_id] = PendingState(global_search_id,
+  //    QStringList());
+  //  }
 }
 
 void GroovesharkSearchProvider::MaybeSearchFinished(int id) {

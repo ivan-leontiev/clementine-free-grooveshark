@@ -84,6 +84,7 @@ void GroovesharkSettingsPage::Save() {
 
   s.setValue("username", ui_->username->text());
   s.setValue("sessionid", service_->session_id());
+  s.setValue("userID", service_->user_id());
   const bool old_sort_value = s.value("sort_alphabetically").toBool();
   const bool new_sort_value = ui_->sort_alphabetically->isChecked();
   if (old_sort_value != new_sort_value) {
@@ -107,22 +108,22 @@ void GroovesharkSettingsPage::UpdateLoginState() {
       ui_->username->text());
   ui_->login_state->SetAccountTypeVisible(!logged_in);
 
-  switch (service_->login_state()) {
-    case GroovesharkService::LoginState_NoPremium:
-      ui_->login_state->SetAccountTypeText(
-          tr("You do not have a Grooveshark Anywhere account."));
-      break;
+  //  switch (service_->login_state()) {
+  //    case GroovesharkService::LoginState_NoPremium:
+  //      ui_->login_state->SetAccountTypeText(
+  //          tr("You do not have a Grooveshark Anywhere account."));
+  //      break;
 
-    case GroovesharkService::LoginState_AuthFailed:
-      ui_->login_state->SetAccountTypeText(
-          tr("Your username or password was incorrect."));
-      break;
+  //    case GroovesharkService::LoginState_AuthFailed:
+  //      ui_->login_state->SetAccountTypeText(
+  //          tr("Your username or password was incorrect."));
+  //      break;
 
-    default:
-      ui_->login_state->SetAccountTypeText(
-          tr("A Grooveshark Anywhere account is required."));
-      break;
-  }
+  //    default:
+  //      ui_->login_state->SetAccountTypeText(
+  //          tr("A Grooveshark Anywhere account is required."));
+  //      break;
+  //  }
 }
 
 void GroovesharkSettingsPage::Logout() {
