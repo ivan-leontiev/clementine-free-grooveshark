@@ -3,6 +3,10 @@
 #include "core/logging.h"
 
 #include <QNetworkAccessManager>
+#include <QStringList>
+#include <QSignalMapper>
+#include <QStateMachine>
+#include <QHistoryState>
 #include <QSettings>
 #include <QNetworkReply>
 #include <QTimer>
@@ -12,9 +16,11 @@
 #include <qjson/serializer.h>
 
 const QString kSettingsGroup = "Grooveshark";
+const int GSClient::kCTokenTimeout = 600 * 1000;
+const int GSReply::kGSReplyTimeout = 20000;
 static const QString kGSMoreUrl = "https://grooveshark.com/more.php?%1";
-static const QString kGSCoverUrl =
-    "http://beta.grooveshark.com/static/amazonart/l";
+// static const QString kGSCoverUrl =
+//    "http://beta.grooveshark.com/static/amazonart/l";
 static const QString kGSHomeUrl = "http://grooveshark.com/";
 
 static const ClientPreset kMobileClient = {"mobileshark", 20120830,
@@ -25,6 +31,7 @@ static const ClientPreset kJSClient = {"jsqueue", 20130520, "nuggetsOfBaller"};
 GSClient::GSClient(QObject* parent)
     : QObject(parent),
       network_(new QNetworkAccessManager(this)),
+      sm_(new QStateMachine(this)),
       ctoken_timer_(new QTimer) {
   QSettings s;
   s.beginGroup(kSettingsGroup);
@@ -33,38 +40,37 @@ GSClient::GSClient(QObject* parent)
   user_id_ = s.value("userID").toString();
   uuid_ = QUuid::createUuid().toString().mid(1, 36).toUpper();
 
+  SetLoggedIn(!user_id_.isEmpty());
+
   ctoken_timer_->setSingleShot(true);
-  ctoken_timer_->setInterval(600 * 1000);
+  ctoken_timer_->setInterval(kCTokenTimeout);
   connect(ctoken_timer_, SIGNAL(timeout()), this, SLOT(CTokenExpired()));
+  connect(this, SIGNAL(Fault()), this, SLOT(OnFault()));
+
+  SetupSM();
 }
 
 void GSClient::CreateSession() {
-  if (IsInState(State_Connecting)) return;
-  setStateFlags(GSClient::State_Connecting);
-
-  //  session_.clear();
+  qLog(Debug) << Q_FUNC_INFO;
 
   if (!session_.isEmpty()) {
-    UpdateCommunicationToken();
+    emit Ok();
     return;
   }
 
-  qLog(Debug) << Q_FUNC_INFO;
-  GSReply* gsreply = Request("initiateSession", QVariantMap());
-  if (gsreply) {
-    NewClosure(gsreply, SIGNAL(Finished()), this,
-               SLOT(SessionCreated(GSReply*)), gsreply);
-  }
-  //  reply->deleteLater();
+  GSReply* gsreply =
+      Request("initiateSession", QList<Param>(), false, SysRequestEventType);
+
+  NewClosure(gsreply, SIGNAL(Finished()), this, SLOT(SessionCreated(GSReply*)),
+             gsreply);
 }
 
 void GSClient::SessionCreated(GSReply* reply) {
   reply->deleteLater();
 
   if (reply->hasError()) {
-    qLog(Error) << "Failed to create Grooveshark session: ";
-    //    emit StreamError("Failed to create Grooveshark session: " +
-    //    reply->error());
+    qLog(Error) << "Failed to create Grooveshark session.";
+    emit Fault();
     return;
   }
 
@@ -72,20 +78,19 @@ void GSClient::SessionCreated(GSReply* reply) {
   session_ = result;
   qLog(Debug) << "session id: " << session_;
 
-  UpdateCommunicationToken();
+  emit Ok();
 }
 
 void GSClient::UpdateCommunicationToken() {
-  if (IsInState(State_UpdatingToken)) return;
   qLog(Debug) << Q_FUNC_INFO;
 
-  setStateFlags(GSClient::State_UpdatingToken);
-  QVariantMap m;
-  m.insert("secretKey",
-           QString(QCryptographicHash::hash(session_.toUtf8(),
-                                            QCryptographicHash::Md5).toHex()));
+  QList<Param> params;
+  params << Param("secretKey", QString(QCryptographicHash::hash(
+                                           session_.toUtf8(),
+                                           QCryptographicHash::Md5).toHex()));
 
-  GSReply* gsreply = Request("getCommunicationToken", m);
+  GSReply* gsreply =
+      Request("getCommunicationToken", params, false, SysRequestEventType);
   NewClosure(gsreply, SIGNAL(Finished()), this,
              SLOT(CommunicationTokenUpdated(GSReply*)), gsreply);
 }
@@ -93,47 +98,169 @@ void GSClient::UpdateCommunicationToken() {
 void GSClient::CommunicationTokenUpdated(GSReply* reply) {
   reply->deleteLater();
 
+  if (reply->hasError()) {
+    qLog(Error) << "Error while updating communication token.";
+    emit Fault();
+    return;
+  }
+
   QString result = reply->getResult().toString();
   ctoken_ = result;
   ctoken_timer_->start();
-  setStateFlags(GSClient::State_Connected);
-  unsetStateFlags(GSClient::State_TokenExpired | GSClient::State_UpdatingToken |
-                  GSClient::State_Connecting);
-  emit Connected();
-
-  if (!user_id_.isEmpty()) {
-    AuthenticateAsAuthorizedUser();
-  }
+  emit Ok();
 }
 
 void GSClient::AuthenticateAsAuthorizedUser() {
-  if (IsInState(GSClient::State_Authenticating)) return;
-  setStateFlags(GSClient::State_Authenticating);
+  qLog(Debug) << Q_FUNC_INFO;
+  if (user_id_.isEmpty()) {
+    emit LoginFinished(false);
+    return;
+  }
 
   GSReply* reply = Request("authenticateAsAuthorizedUser",
-                           QList<Param>() << Param("userID", user_id_));
+                           QList<Param>() << Param("userID", user_id_), false);
   NewClosure(reply, SIGNAL(Finished()), this, SLOT(LoggedIn(GSReply*)), reply);
 }
 
+void GSClient::SetupSM() {
+  QState* s1 = new QState();  // idle
+
+  QState* s2 = new QState();     // connecting group
+  QState* s21 = new QState(s2);  // creating session
+  QState* s22 = new QState(s2);  // updating ctoken
+
+  QState* s3 = new QState();  // connected group
+  QHistoryState* s3h = new QHistoryState(QHistoryState::DeepHistory,
+                                         s3);  // connected state history
+
+  QState* s31 = new QState(s3);  // authenticating
+
+  QState* s32 = new QState(s3);    // ready subgroup
+  QState* s321 = new QState(s32);  // not logged in
+  QState* s322 = new QState(s32);  // logged in
+
+  //   idle group
+  DeferRequestTransition* s1_to_s2 = new DeferRequestTransition(this);
+  s1_to_s2->setTargetState(s2);
+  s1->addTransition(s1_to_s2);
+
+  //  connecting group
+  s2->setInitialState(s21);
+  s2->addTransition(this, SIGNAL(Fault()), s1);
+
+  connect(s21, SIGNAL(entered()), this, SLOT(CreateSession()));
+  s21->addTransition(this, SIGNAL(Ok()), s22);
+  connect(s22, SIGNAL(entered()), this, SLOT(UpdateCommunicationToken()));
+  s22->addTransition(this, SIGNAL(Ok()), s3);
+
+  DeferRequestTransition* s2_to_s2 = new DeferRequestTransition(this);
+  s2->addTransition(s2_to_s2);
+
+  //  connected group
+  s3->setInitialState(s3h);
+  s3h->setDefaultState(s31);
+  s3->addTransition(ctoken_timer_, SIGNAL(timeout()), s1);
+  s3->addTransition(this, SIGNAL(CTExpired()), s1);
+
+  RequestTransition* s3_req_nauth = new RequestTransition(this, false);
+  s3->addTransition(s3_req_nauth);
+
+  //  authenticating
+  connect(s31, SIGNAL(entered()), this, SLOT(AuthenticateAsAuthorizedUser()));
+
+  RequestTransition* s31_req_auth = new DeferRequestTransition(this, true);
+  s31->addTransition(s31_req_auth);
+
+  LoginFinishedTransition* s31_login_done =
+      new LoginFinishedTransition(this, true, s31);
+  s31_login_done->setTargetState(s322);
+
+  LoginFinishedTransition* s31_login_fault =
+      new LoginFinishedTransition(this, false, s31);
+  s31_login_fault->setTargetState(s321);
+
+  //  ready subgroup
+  connect(s32, SIGNAL(entered()), this, SIGNAL(Ready()));
+
+  CancelRequestTransition* s321_req_auth =
+      new CancelRequestTransition(this, true);
+  s321->addTransition(s321_req_auth);
+
+  LoginFinishedTransition* s321_login_done =
+      new LoginFinishedTransition(this, true, s321);
+  s321_login_done->setTargetState(s322);
+
+  RequestTransition* s322_req_auth = new RequestTransition(this, true);
+  s322->addTransition(s322_req_auth);
+
+  LoginFinishedTransition* s322_login_fault =
+      new LoginFinishedTransition(this, false, s322);
+  s322_login_fault->setTargetState(s321);
+
+  sm_->addState(s1);
+  sm_->addState(s2);
+  sm_->addState(s3);
+  sm_->setInitialState(s1);
+
+  QSignalMapper* mapper = new QSignalMapper();
+  connect(s1, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s2, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s3, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s21, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s22, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s31, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s32, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s321, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s322, SIGNAL(entered()), mapper, SLOT(map()));
+  mapper->setMapping(s1, "s1");
+  mapper->setMapping(s2, "s2");
+  mapper->setMapping(s3, "s3");
+  mapper->setMapping(s21, "s21");
+  mapper->setMapping(s22, "s22");
+  mapper->setMapping(s31, "s31");
+  mapper->setMapping(s32, "s32");
+  mapper->setMapping(s321, "s321");
+  mapper->setMapping(s322, "s322");
+  connect(mapper, SIGNAL(mapped(QString)), this, SLOT(DebugSlot(QString)));
+
+  sm_->start();
+}
+
+void GSClient::DebugSlotMark() {
+  qLog(Debug) << "==============================="
+              << "mark"
+              << "===========================";
+}
+
+void GSClient::DebugSlot(QString str) {
+  qLog(Debug) << "===============================" << str
+              << "===========================";
+}
+
 void GSClient::Login(const QString& login, const QString& password) {
-  if (IsInState(GSClient::State_Authenticating)) return;
-  setStateFlags(GSClient::State_Authenticating);
-  GSReply* reply = Request("authenticateUser",
-                           QList<Param>() << Param("username", login)
-                                          << Param("password", password));
+  qLog(Debug) << Q_FUNC_INFO;
+  GSReply* reply =
+      Request("authenticateUser", QList<Param>() << Param("username", login)
+                                                 << Param("password", password),
+              false);
   NewClosure(reply, SIGNAL(Finished()), this, SLOT(LoggedIn(GSReply*)), reply);
 }
 
 void GSClient::Logout() {
-  if (IsNotInState(GSClient::State_Authenticated)) return;
-  unsetStateFlags(GSClient::State_Authenticated);
   user_id_.clear();
 
-  GSReply* reply = Request("logoutUser", QList<Param>());
-  NewClosure(reply, SIGNAL(Finished()), reply, SLOT(deleteLater()));
+  GSReply* reply = Request("logoutUser", QList<Param>(), false);
+  connect(reply, SIGNAL(Finished()), reply, SLOT(deleteLater()));
+  NewClosure(reply, SIGNAL(Finished()), [this, reply]() {
+    if (!reply->hasError()) {
+      this->SetLoggedIn(false);
+      emit this->LoginFinished(false);
+    }
+  });
 }
 
 void GSClient::LoggedIn(GSReply* reply) {
+  qLog(Debug) << Q_FUNC_INFO;
   reply->deleteLater();
 
   QVariantMap result = reply->getResult().toMap();
@@ -141,16 +268,18 @@ void GSClient::LoggedIn(GSReply* reply) {
 
   if (result["userID"].toInt() == 0) {
     error = tr("Invalid username and/or password");
-    unsetStateFlags(GSClient::State_Authenticating |
-                    GSClient::State_Authenticated);
+    SetLoggedIn(false);
     emit LoginFinished(false);
   } else {
     user_id_ = result["userID"].toString();
-    unsetStateFlags(GSClient::State_Authenticating);
-    setStateFlags(GSClient::State_Authenticated);
+    SetLoggedIn(true);
     emit LoginFinished(true);
   }
 }
+
+void GSClient::PostEvent(QEvent* event) { sm_->postEvent(event); }
+
+void GSClient::OnFault() { this->disconnect(SIGNAL(Ready())); }
 
 void GSClient::DecorateRequest(QNetworkRequest& request,
                                QVariantMap& parameters) {
@@ -161,7 +290,6 @@ void GSClient::DecorateRequest(QNetworkRequest& request,
     SetupClient(header, method_name, kMobileClient);
   else
     SetupClient(header, method_name, kJSClient);
-  //    SetupClient(header, method_name, kJSClient);
 
   header.insert("country", QVariantMap());
   header.insert("session", session_);
@@ -198,18 +326,13 @@ QString GSClient::CreateToken(const QString& method, const QString& salt) {
   } while (rnd == prev_rnd);
   prev_rnd = rnd;
 
-  QString plain = method + ":" + ctoken_ + ":" + salt + ":" + rnd;
+  QString plain = (QStringList() << method << ctoken_ << salt << rnd).join(":");
+
   QString hexhash =
       QString(QCryptographicHash::hash(plain.toUtf8(), QCryptographicHash::Sha1)
                   .toHex());
   return rnd + hexhash;
 }
-
-void GSClient::setStateFlags(int state) {
-  state_ = GSClient::States(state_ | state);
-}
-
-void GSClient::unsetStateFlags(int state) { state_ &= ~state; }
 
 QNetworkReply* GSClient::makeRequest(const QString& method,
                                      const QVariantMap& parameters) {
@@ -228,8 +351,11 @@ QNetworkReply* GSClient::makeRequest(const QString& method,
 
   qLog(Debug) << data << "===============";
   QNetworkReply* reply = network_->post(request, data);
-
   return reply;
+}
+
+void GSClient::makeRequest(GSReply* reply) {
+  reply->setReply(makeRequest(reply->method_, reply->parameters_));
 }
 
 void GSClient::ClearSession() {
@@ -237,107 +363,82 @@ void GSClient::ClearSession() {
   ctoken_.clear();
 }
 
-// void GSClient::Connect() {
-//  CreateSession();
-//}
-
-GSReply* GSClient::Request(const QString& method, const QVariantMap& parameters,
+GSReply* GSClient::Request(const QString method, const QList<Param> parameters,
                            bool auth_required) {
-  qLog(Debug) << Q_FUNC_INFO;
-
-  GSReply* gsreply = new GSReply(this);
-  gsreply->setRequest(method, parameters);
-
-  if ((IsNotInState(State_Connected) || IsInState(State_Connecting) ||
-       IsInState(State_TokenExpired) || IsInState(State_UpdatingToken)) &&
-      !(method == "initiateSession" || method == "getCommunicationToken")) {
-    qLog(Debug) << "deffered request" << state_ << method;
-    NewClosure(this, SIGNAL(Connected()), this,
-               SLOT(DefferedRequest(QString, QVariantMap, GSReply*)), method,
-               parameters, gsreply);
-    CreateSession();
-    return gsreply;
-  }
-
-  if (auth_required) {
-    if (IsNotInState(GSClient::State_Authenticated |
-                     GSClient::State_Authenticating)) {
-      delete gsreply;
-      return nullptr;
-    }
-
-    if (IsInState(GSClient::State_Authenticating)) {
-      NewClosure(this, SIGNAL(LoginFinished(bool)), this,
-                 SLOT(DefferedRequest(QString, QVariantMap, GSReply*)), method,
-                 parameters, gsreply);
-      return gsreply;
-    }
-  }
-
-  qLog(Debug) << "usual request" << state_;
-
-  gsreply->setReply(makeRequest(method, parameters));
-
-  //  NewClosure(reply, SIGNAL(finished()), this, SLOT(ProcessReply(GSReply*,
-  //  QNetworkReply*)), gsreply, reply);
-
-  return gsreply;
+  return Request(method, parameters, auth_required, RequestEventType);
 }
 
-GSReply* GSClient::Request(const QString& method,
-                           const QList<Param>& parameters, bool auth_required) {
+GSReply* GSClient::Request(const QString method, const QList<Param> parameters,
+                           bool auth_required, QEvent::Type type) {
+  qLog(Debug) << Q_FUNC_INFO;
   QVariantMap params;
   for (const Param& p : parameters) {
     params.insert(p.first, p.second);
   }
-  return Request(method, params, auth_required);
+
+  GSReply* gsreply = new GSReply(this);
+  gsreply->setRequest(method, params, auth_required, type);
+
+  sm_->postEvent(new ReqEvent(type, gsreply));
+
+  return gsreply;
 }
 
 void GSReply::setReply(QNetworkReply* reply) {
+  timer_.stop();
   reply_ = reply;
+  reply_->setParent(this);
   connect(reply, SIGNAL(finished()), this, SLOT(ProcessReply()));
+  connect(reply, SIGNAL(destroyed()), client_, SLOT(DebugSlotMark()));
+  connect(&timer_, SIGNAL(timeout()), this, SLOT(ProcessReply()));
+  timer_.start();
 }
 
-void GSReply::setRequest(const QString& method, const QVariantMap& parameters) {
+void GSReply::setRequest(const QString method, const QVariantMap parameters,
+                         bool auth_required, QEvent::Type type) {
   method_ = method;
   parameters_ = parameters;
+  auth_required_ = auth_required;
+  type_ = type;
 }
 
-bool GSReply::ProcessError(const QVariantMap& result) {
+void GSReply::Cancel() {
+  qLog(Debug) << Q_FUNC_INFO;
+  timer_.stop();
+  SetError(GSClient::Error_Cancelled, "Request cancelled.");
+  emit Finished();
+}
+
+void GSReply::SetError(GSClient::Error error, const QString& msg) {
+  qLog(Error) << error << msg;
+  has_error_ = true;
+  error_ = error;
+  error_msg_ = msg;
+}
+
+bool GSReply::ProcessReplyError(const QVariantMap& result) {
   bool resend = false;
   QVariantMap fault = result["fault"].toMap();
   if (!fault.isEmpty()) {
-    has_error_ = true;
-    error_ = GSClient::Error(fault["code"].toInt());
-    error_msg_ = fault["message"].toString();
+    GSClient::Error error = GSClient::Error(fault["code"].toInt());
 
-    qLog(Debug) << fault["code"].toString() << fault["message"].toString()
-                << "!!!!!!!!!!!!!";
-
-    switch (error_) {
+    switch (error) {
       case GSClient::Error_InvalidToken:
         resend = true;
-        client_->setStateFlags(GSClient::State_TokenExpired);
-        //      client_->DefferedRequest(method_, parameters_, this);
-        client_->UpdateCommunicationToken();
-        NewClosure(client_, SIGNAL(Connected()), client_,
-                   SLOT(DefferedRequest(QString, QVariantMap, GSReply*)),
-                   method_, parameters_, this);
+        client_->ctoken_timer_->stop();
+        emit client_->CTExpired();
         break;
       case GSClient::Error_InvalidSession:
       case GSClient::Error_FetchingToken:
-        resend = true;
-        client_->unsetStateFlags(GSClient::State_Connected);
+        if (type_ == SysRequestEventType)
+          has_error_ = true;
+        else
+          resend = true;
         client_->ClearSession();
-        client_->CreateSession();
-        //      client_->DefferedRequest(method_, parameters_, this);
-        NewClosure(client_, SIGNAL(Connected()), client_,
-                   SLOT(DefferedRequest(QString, QVariantMap, GSReply*)),
-                   method_, parameters_, this);
+        emit client_->CTExpired();
         break;
       case GSClient::Error_MustBeLoggedIn:
-        client_->user_id_.clear();
-        client_->unsetStateFlags(GSClient::State_Authenticated);
+        SetError(error, fault["message"].toString());
         break;
       default:
         break;
@@ -346,18 +447,15 @@ bool GSReply::ProcessError(const QVariantMap& result) {
   return resend;
 }
 
-// GSReply::~GSReply() {
-//  reply_->deleteLater();
-//}
-
 void GSReply::ProcessReply() {
-  reply_->deleteLater();
-
+  if (!timer_.isActive()) {
+    SetError(GSClient::Error_HttpTimeout, "Http timeout");
+    emit Finished();
+    return;
+  }
   if (reply_->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() !=
       200) {
-    has_error_ = true;
-    error_ = GSClient::Error_HttpError;
-    error_msg_ = "";
+    SetError(GSClient::Error_HttpError, "Http status code error");
     emit Finished();
     return;
   }
@@ -368,26 +466,21 @@ void GSReply::ProcessReply() {
   qLog(Debug) << raw
               << "-----------------------------------------GSReply-------"
               << method_ << parameters_ << "\n";
-  //  QVariantMap result = parser.parse(reply, &ok).toMap();
   QVariantMap result = parser.parse(raw, &ok).toMap();
   if (!ok) {
-    qLog(Error) << "Error while parsing Grooveshark result";
+    SetError(GSClient::Error_ParseError,
+             "Error while parsing Grooveshark result");
+    emit Finished();
+    return;
   }
 
-  if (ProcessError(result)) return;
+  if (ProcessReplyError(result)) {
+    client_->PostEvent(new ReqEvent(type_, this));
+    return;
+  }
 
   result_ = result["result"];
   emit Finished();
 }
 
-void GSClient::CTokenExpired() {
-  qLog(Debug) << Q_FUNC_INFO;
-  setStateFlags(GSClient::State_TokenExpired);
-}
-
-void GSClient::DefferedRequest(const QString& method,
-                               const QVariantMap& parameters,
-                               GSReply* deffered) {
-  qLog(Debug) << Q_FUNC_INFO;
-  deffered->setReply(makeRequest(method, parameters));
-}
+void GSClient::CTokenExpired() { qLog(Debug) << Q_FUNC_INFO; }

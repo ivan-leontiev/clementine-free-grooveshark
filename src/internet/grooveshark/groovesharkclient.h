@@ -1,13 +1,20 @@
 #ifndef INTERNET_GROOVESHARK_GROOVESHARKCLIENT_H
 #define INTERNET_GROOVESHARK_GROOVESHARKCLIENT_H
 
+#include "core/logging.h"
+#include "core/closure.h"
+
 #include <QObject>
 #include <QVariantMap>
 #include <QNetworkRequest>
+#include <QStateMachine>
+#include <QTimer>
+#include <QSignalTransition>
+#include <QEvent>
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class QTimer;
+// class QTimer;
 class GSReply;
 
 typedef QPair<QString, QVariant> Param;
@@ -22,22 +29,12 @@ class GSClient : public QObject {
   Q_OBJECT
   Q_FLAGS(States)
   Q_ENUMS(Error)
+  Q_PROPERTY(bool logged_in READ IsLoggedIn WRITE SetLoggedIn)
 
   friend class GSReply;
 
  public:
   explicit GSClient(QObject* parent = 0);
-
-  enum State {
-    State_LoggedIn = 1 << 0,
-    State_UpdatingToken = 1 << 1,
-    State_TokenExpired = 1 << 2,
-    State_Connecting = 1 << 3,
-    State_Connected = 1 << 4,
-    State_Authenticating = 1 << 5,
-    State_Authenticated = 1 << 6
-  };
-  Q_DECLARE_FLAGS(States, State)
 
   enum Error {
     Error_FetchingToken = 0,
@@ -50,98 +47,206 @@ class GSClient : public QObject {
     Error_InvalidSession = 16,
     Error_InvalidToken = 256,
     Error_RateLimited = 512,
-    Error_InvalidClient = 1024
+    Error_InvalidClient = 1024,
+    Error_Cancelled = 333
   };
 
-  //  void Connect();
   void Login(const QString& login, const QString& password);
   void Logout();
-  //  bool IsConnected() { return IsInState(GSClient::State_Connected); }
-  bool IsLoggedIn() { return IsInState(GSClient::State_Authenticated); }
-  bool IsInState(int states) { return (state_ & states) == states; }
-  bool IsNotInState(int states) { return (state_ & ~states) == state_; }
-  GSReply* Request(const QString& method, const QVariantMap& parameters,
-                   bool auth_required = false);
-  GSReply* Request(const QString& method, const QList<Param>& parameters,
+  bool IsLoggedIn() { return logged_in_; }
+  GSReply* Request(const QString method, const QList<Param> parameters,
                    bool auth_required = false);
   const QString& getSessionID() { return session_; }
   const QString& getUserID() { return user_id_; }
 
+ public slots:
+  void SetLoggedIn(bool b) { logged_in_ = b; }
+  void makeRequest(GSReply* reply);
+  void DebugSlot(QString);
+
+  void DebugSlotMark();
 signals:
-  void Connected();
+  void Ready();
   void LoginFinished(bool success);
+  void Ok();
+  void CTExpired();
+  void Fault();
 
  private:
-  QNetworkAccessManager* network_;
-  GSClient::States state_;
+  static const int kCTokenTimeout;
 
-  //  QString username_;
-  //  QString password_;
+  QNetworkAccessManager* network_;
+  QStateMachine* sm_;
 
   QString session_;
   QString ctoken_;
-  //  QDateTime ctoken_expiry_time_;
   QTimer* ctoken_timer_;
   QString user_id_;
   QString uuid_;
   QVariantMap country_;
+  bool logged_in_;
 
  private:
-  void CreateSession();
-  void UpdateCommunicationToken();
+  GSReply* Request(const QString method, const QList<Param> parameters,
+                   bool auth_required, QEvent::Type type);
   void DecorateRequest(QNetworkRequest& request, QVariantMap& parameters);
   void SetupClient(QVariantMap& header, const QString& method,
                    const ClientPreset& client);
   QString CreateToken(const QString& method, const QString& salt);
-  void setStateFlags(int state);
-  void unsetStateFlags(int state);
   void WaitForReply(QNetworkReply* reply);
-  QNetworkReply* makeRequest(const QString& method,
-                             const QVariantMap& parameters);
   void ClearSession();
-  void AuthenticateAsAuthorizedUser();
+  void SetupSM();
 
  private slots:
+  void CreateSession();
+  void UpdateCommunicationToken();
+  void AuthenticateAsAuthorizedUser();
+  QNetworkReply* makeRequest(const QString& method,
+                             const QVariantMap& parameters);
   void SessionCreated(GSReply* reply);
   void CommunicationTokenUpdated(GSReply* reply);
   void CTokenExpired();
-  void DefferedRequest(const QString& method, const QVariantMap& parameters,
-                       GSReply* deffered);
   void LoggedIn(GSReply* reply);
+  void PostEvent(QEvent* event);
+  void OnFault();
 };
 
 class GSReply : public QObject {
   Q_OBJECT
 
+  friend class RequestTransition;
+
+ public:
+  QString method_;
+  QVariantMap parameters_;
+  bool auth_required_;
+
  public:
   explicit GSReply(GSClient* client)
-      : has_error_(false), resending_(false), client_(client) {}
+      : has_error_(false), resending_(false), client_(client) {
+    timer_.setInterval(kGSReplyTimeout);
+  }
 
   bool hasError() { return has_error_; }
   QVariant getResult() const { return result_; }
   void setReply(QNetworkReply* reply);
-  void setRequest(const QString& method, const QVariantMap& parameters);
-//  GSClient::Error getError() const { return error_; }
+  void setRequest(const QString method, const QVariantMap parameters,
+                  bool auth_required, QEvent::Type type);
+  void Cancel();
 
 signals:
   void Finished();
 
  private:
-  bool ProcessError(const QVariantMap& result);
+  bool ProcessReplyError(const QVariantMap& result);
+  void SetError(GSClient::Error error, const QString& msg);
 
  private slots:
   void ProcessReply();
 
  private:
+  static const int kGSReplyTimeout;
+
   bool has_error_;
   bool resending_;
+  QEvent::Type type_;
   QVariant result_;
   QNetworkReply* reply_;
   GSClient* client_;
-  QString method_;
-  QVariantMap parameters_;
   GSClient::Error error_;
   QString error_msg_;
+  QTimer timer_;
+};
+
+// Q_DECLARE_METATYPE(GSReply*)
+
+const QEvent::Type RequestEventType = QEvent::Type(QEvent::User + 1);
+const QEvent::Type SysRequestEventType = QEvent::Type(QEvent::User + 2);
+
+class LoginFinishedTransition : public QSignalTransition {
+ public:
+  LoginFinishedTransition(GSClient* sender, bool ok, QState* sourceState = 0)
+      : QSignalTransition(sender, SIGNAL(LoginFinished(bool)), sourceState),
+        ok_(ok) {}
+
+  virtual bool eventTest(QEvent* e) {
+    if (!QSignalTransition::eventTest(e)) return false;
+    QStateMachine::SignalEvent* se =
+        static_cast<QStateMachine::SignalEvent*>(e);
+
+    return ok_ == se->arguments().at(0).toBool();
+  }
+
+ private:
+  bool ok_;
+};
+
+class ReqEvent : public QEvent {
+ public:
+  ReqEvent(Type type, GSReply* reply) : QEvent(type), reply_(reply) {}
+  GSReply* getReply() { return reply_; }
+  QString getMethod() { return reply_->method_; }
+  bool isAuthRequired() { return reply_->auth_required_; }
+
+ protected:
+  GSReply* reply_;
+};
+
+class RequestTransition : public QAbstractTransition {
+ public:
+  RequestTransition(GSClient* client, bool auth_required)
+      : client_(client), auth_required_(auth_required), check_auth_(true) {}
+  RequestTransition(GSClient* client) : client_(client), check_auth_(false) {}
+
+  virtual bool eventTest(QEvent* event) {
+    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
+    return (event->type() == RequestEventType ||
+            event->type() == SysRequestEventType) &&
+           (!check_auth_ || (reply->auth_required_ == auth_required_));
+  }
+
+  virtual void onTransition(QEvent* event) {
+    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
+    client_->makeRequest(reply);
+  }
+
+ protected:
+  GSClient* client_;
+  bool auth_required_;
+  bool check_auth_;
+};
+
+class DeferRequestTransition : public RequestTransition {
+ public:
+  DeferRequestTransition(GSClient* client, bool auth_required)
+      : RequestTransition(client, auth_required) {}
+  DeferRequestTransition(GSClient* client) : RequestTransition(client) {}
+
+  virtual void onTransition(QEvent* event) {
+    ReqEvent* re = static_cast<ReqEvent*>(event);
+    if (re->type() == SysRequestEventType) {
+      RequestTransition::onTransition(event);
+    } else {
+      ReqEvent* new_re = new ReqEvent(RequestEventType, re->getReply());
+      NewClosure(client_, SIGNAL(Ready()), client_, SLOT(PostEvent(QEvent*)),
+                 new_re);
+      NewClosure(client_, SIGNAL(Fault()), [new_re]() {
+        new_re->getReply()->Cancel();
+        delete new_re;
+      });
+    }
+  }
+};
+
+class CancelRequestTransition : public RequestTransition {
+ public:
+  CancelRequestTransition(GSClient* client, bool auth_required_)
+      : RequestTransition(client, auth_required_) {}
+
+  virtual void onTransition(QEvent* event) {
+    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
+    reply->Cancel();
+  }
 };
 
 #endif  // INTERNET_GROOVESHARK_GROOVESHARKCLIENT_H
