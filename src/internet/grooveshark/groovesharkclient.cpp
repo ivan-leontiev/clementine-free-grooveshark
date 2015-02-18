@@ -19,8 +19,6 @@ const QString kSettingsGroup = "Grooveshark";
 const int GSClient::kCTokenTimeout = 600 * 1000;
 const int GSReply::kGSReplyTimeout = 20000;
 static const QString kGSMoreUrl = "https://grooveshark.com/more.php?%1";
-// static const QString kGSCoverUrl =
-//    "http://beta.grooveshark.com/static/amazonart/l";
 static const QString kGSHomeUrl = "http://grooveshark.com/";
 
 static const ClientPreset kMobileClient = {"mobileshark", 20120830,

@@ -158,8 +158,6 @@ signals:
   QTimer timer_;
 };
 
-// Q_DECLARE_METATYPE(GSReply*)
-
 const QEvent::Type RequestEventType = QEvent::Type(QEvent::User + 1);
 const QEvent::Type SysRequestEventType = QEvent::Type(QEvent::User + 2);
 

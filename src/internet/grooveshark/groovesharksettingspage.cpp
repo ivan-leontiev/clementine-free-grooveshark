@@ -107,23 +107,6 @@ void GroovesharkSettingsPage::UpdateLoginState() {
       logged_in ? LoginStateWidget::LoggedIn : LoginStateWidget::LoggedOut,
       ui_->username->text());
   ui_->login_state->SetAccountTypeVisible(!logged_in);
-
-  //  switch (service_->login_state()) {
-  //    case GroovesharkService::LoginState_NoPremium:
-  //      ui_->login_state->SetAccountTypeText(
-  //          tr("You do not have a Grooveshark Anywhere account."));
-  //      break;
-
-  //    case GroovesharkService::LoginState_AuthFailed:
-  //      ui_->login_state->SetAccountTypeText(
-  //          tr("Your username or password was incorrect."));
-  //      break;
-
-  //    default:
-  //      ui_->login_state->SetAccountTypeText(
-  //          tr("A Grooveshark Anywhere account is required."));
-  //      break;
-  //  }
 }
 
 void GroovesharkSettingsPage::Logout() {

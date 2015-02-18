@@ -227,8 +227,7 @@ signals:
   bool WaitForGSReply(GSReply* reply);
   // Convenient function for extracting songs from grooveshark result. result
   // should be the "result" field of most Grooveshark replies
-  SongList ExtractSongs(const QVariantMap& result_old,
-                        QVariantList result_songs, bool f = false);
+  SongList ExtractSongs(QVariantList result_songs);
   // Convenient function for extracting song from grooveshark result.
   // result_song should be the song field ('song', 'nextSong', ...) of the
   // Grooveshark reply
