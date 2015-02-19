@@ -851,21 +851,11 @@ void GroovesharkService::RetrieveAutoplayTags() {
 
 void GroovesharkService::AutoplayTagsRetrieved(GSReply* reply) {
   reply->deleteLater();
-  //  QVariantList result = reply->getResult().toList();
   QVariantMap result = reply->getResult().toMap();
-  //  QVariantMap::const_iterator it;
   if (!stations_) return;
-  //  for (it = result.constBegin(); it != result.constEnd(); ++it) {
-  //  for (const auto i : result) {
   for (const auto k : result.keys()) {
-    //    QVariantMap it = i.toMap();
-    //    QString name = it["Tag"].toString().toLower();
     int id = k.toInt();
-    //    int id = it["TagID"].toInt();
     QString name = result[k].toString();
-    // Names received aren't very nice: make them more user friendly to display
-    //    name.replace("_", " ");
-    //    name[0] = name[0].toUpper();
 
     QStandardItem* item =
         new QStandardItem(QIcon(":last.fm/icon_radio.png"), name);
@@ -882,27 +872,39 @@ Song GroovesharkService::StartAutoplayTag(int tag_id,
                                           QVariantMap& autoplay_state) {
   qLog(Debug) << Q_FUNC_INFO;
   QList<Param> parameters;
-  parameters << Param("tagID", tag_id);
-  GSReply* reply = client_->Request("startAutoplayTag", parameters);
+  parameters << Param("tagIDs", QVariantList() << tag_id);
+  GSReply* reply = client_->Request("getTagsSampleSongs", parameters);
 
   bool reply_has_timeouted = !WaitForGSReply(reply);
   reply->deleteLater();
   if (reply_has_timeouted) return Song();
 
-  QVariantMap result = reply->getResult().toMap();
-  autoplay_state = result["autoplayState"].toMap();
-  return ExtractSong(result["nextSong"].toMap());
+  QVariantList result_list = reply->getResult().toList();
+  if (result_list.isEmpty()) return Song();
+
+  QVariantMap result_map = result_list[0].toMap();
+  QList<int> artist_ids;
+  QList<int> song_ids;
+
+  for (auto& song : result_map["Data"].toMap()["Songs"].toList()) {
+    artist_ids << song.toMap()["ArtistID"].toInt();
+    song_ids << song.toMap()["SongID"].toInt();
+  }
+
+  return StartAutoplay(autoplay_state, artist_ids, song_ids);
 }
 
-Song GroovesharkService::StartAutoplay(QVariantMap& autoplay_state) {
+Song GroovesharkService::StartAutoplay(QVariantMap& autoplay_state,
+                                       const QList<int>& artist_ids,
+                                       const QList<int>& song_ids) {
   qLog(Debug) << Q_FUNC_INFO;
   QList<Param> parameters;
   QVariantList artists_ids_qvariant;
-  for (int artist_id : last_artists_ids_) {
+  for (int artist_id : artist_ids) {
     artists_ids_qvariant << QVariant(artist_id);
   }
   QVariantList songs_ids_qvariant;
-  for (int song_id : last_songs_ids_) {
+  for (int song_id : song_ids) {
     songs_ids_qvariant << QVariant(song_id);
   }
   parameters << Param("artistIDs", artists_ids_qvariant)
@@ -917,6 +919,10 @@ Song GroovesharkService::StartAutoplay(QVariantMap& autoplay_state) {
   QVariantMap result = reply->getResult().toMap();
   autoplay_state = result["autoplayState"].toMap();
   return ExtractSong(result["nextSong"].toMap());
+}
+
+Song GroovesharkService::StartAutoplay(QVariantMap& autoplay_state) {
+  return StartAutoplay(autoplay_state, last_artists_ids_, last_songs_ids_);
 }
 
 Song GroovesharkService::GetAutoplaySong(QVariantMap& autoplay_state) {

@@ -109,6 +109,8 @@ class GroovesharkService : public InternetService {
   // Start autoplay for the given tag_id, fill the autoplay_state, returns a
   // first song to play
   Song StartAutoplayTag(int tag_id, QVariantMap& autoplay_state);
+  Song StartAutoplay(QVariantMap& autoplay_state, const QList<int>& artist_ids,
+                     const QList<int>& song_ids);
   Song StartAutoplay(QVariantMap& autoplay_state);
   // Get another autoplay song. autoplay_state is the autoplay_state received
   // from StartAutoplayTag
