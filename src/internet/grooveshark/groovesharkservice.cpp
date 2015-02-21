@@ -306,6 +306,8 @@ QUrl GroovesharkService::GetStreamingUrlFromSongId(const QString& song_id,
   if (reply_has_timeouted) return QUrl();
 
   QVariantMap result = reply->getResult().toMap();
+  if (result.isEmpty()) return QUrl();
+
   server_id->clear();
   server_id->append(result["ip"].toString());
   stream_key->clear();

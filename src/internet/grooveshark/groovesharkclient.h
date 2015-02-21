@@ -14,7 +14,7 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
-// class QTimer;
+class GSRequest;
 class GSReply;
 
 typedef QPair<QString, QVariant> Param;
@@ -32,6 +32,7 @@ class GSClient : public QObject {
   Q_PROPERTY(bool logged_in READ IsLoggedIn WRITE SetLoggedIn)
 
   friend class GSReply;
+  friend class RequestTransition;
 
  public:
   explicit GSClient(QObject* parent = 0);
@@ -61,10 +62,9 @@ class GSClient : public QObject {
 
  public slots:
   void SetLoggedIn(bool b) { logged_in_ = b; }
-  void makeRequest(GSReply* reply);
+  void PostEvent(QEvent* event);
   void DebugSlot(QString);
 
-  void DebugSlotMark();
 signals:
   void Ready();
   void LoginFinished(bool success);
@@ -98,6 +98,7 @@ signals:
   void SetupSM();
 
  private slots:
+  void makeRequest(GSRequest *request);
   void CreateSession();
   void UpdateCommunicationToken();
   void AuthenticateAsAuthorizedUser();
@@ -105,21 +106,21 @@ signals:
                              const QVariantMap& parameters);
   void SessionCreated(GSReply* reply);
   void CommunicationTokenUpdated(GSReply* reply);
-  void CTokenExpired();
   void LoggedIn(GSReply* reply);
-  void PostEvent(QEvent* event);
   void OnFault();
+};
+
+class ReqEvent : public QEvent {
+ public:
+  ReqEvent(GSRequest* request);
+  GSRequest* getRequest() { return request_; }
+
+ protected:
+  GSRequest* request_;
 };
 
 class GSReply : public QObject {
   Q_OBJECT
-
-  friend class RequestTransition;
-
- public:
-  QString method_;
-  QVariantMap parameters_;
-  bool auth_required_;
 
  public:
   explicit GSReply(GSClient* client)
@@ -130,8 +131,7 @@ class GSReply : public QObject {
   bool hasError() { return has_error_; }
   QVariant getResult() const { return result_; }
   void setReply(QNetworkReply* reply);
-  void setRequest(const QString method, const QVariantMap parameters,
-                  bool auth_required, QEvent::Type type);
+  void setRequest(GSRequest* request);
   void Cancel();
 
 signals:
@@ -156,6 +156,36 @@ signals:
   GSClient::Error error_;
   QString error_msg_;
   QTimer timer_;
+  GSRequest* request_;
+};
+
+class GSRequest : public QObject {
+  Q_OBJECT
+
+ public:
+  GSRequest(GSClient* client, GSReply* reply, const QString& method, const QVariantMap& parameters, bool auth_required, QEvent::Type type)
+    : QObject(reply), client_(client), reply_(reply), method_(method), parameters_(parameters), auth_required_(auth_required), type_(type)
+  {}
+
+  QString getMethod() { return method_; }
+  QVariantMap getParameters() { return parameters_; }
+  QEvent::Type getType() { return type_; }
+  bool getAuthRequired() { return auth_required_; }
+  GSReply* getReply() { return reply_; }
+
+ public slots:
+  void CancelRequest() { reply_->Cancel(); }
+  void PostEvent() {
+    client_->PostEvent(new ReqEvent(this));
+  }
+
+ private:
+  GSClient* client_;
+  GSReply* reply_;
+  QString method_;
+  QVariantMap parameters_;
+  bool auth_required_;
+  QEvent::Type type_;
 };
 
 const QEvent::Type RequestEventType = QEvent::Type(QEvent::User + 1);
@@ -179,17 +209,6 @@ class LoginFinishedTransition : public QSignalTransition {
   bool ok_;
 };
 
-class ReqEvent : public QEvent {
- public:
-  ReqEvent(Type type, GSReply* reply) : QEvent(type), reply_(reply) {}
-  GSReply* getReply() { return reply_; }
-  QString getMethod() { return reply_->method_; }
-  bool isAuthRequired() { return reply_->auth_required_; }
-
- protected:
-  GSReply* reply_;
-};
-
 class RequestTransition : public QAbstractTransition {
  public:
   RequestTransition(GSClient* client, bool auth_required)
@@ -197,15 +216,15 @@ class RequestTransition : public QAbstractTransition {
   RequestTransition(GSClient* client) : client_(client), check_auth_(false) {}
 
   virtual bool eventTest(QEvent* event) {
-    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
+    GSRequest* request = static_cast<ReqEvent*>(event)->getRequest();
     return (event->type() == RequestEventType ||
             event->type() == SysRequestEventType) &&
-           (!check_auth_ || (reply->auth_required_ == auth_required_));
+           (!check_auth_ || (request->getAuthRequired() == auth_required_));
   }
 
   virtual void onTransition(QEvent* event) {
-    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
-    client_->makeRequest(reply);
+    GSRequest* request = static_cast<ReqEvent*>(event)->getRequest();
+    client_->makeRequest(request);
   }
 
  protected:
@@ -225,13 +244,7 @@ class DeferRequestTransition : public RequestTransition {
     if (re->type() == SysRequestEventType) {
       RequestTransition::onTransition(event);
     } else {
-      ReqEvent* new_re = new ReqEvent(RequestEventType, re->getReply());
-      NewClosure(client_, SIGNAL(Ready()), client_, SLOT(PostEvent(QEvent*)),
-                 new_re);
-      NewClosure(client_, SIGNAL(Fault()), [new_re]() {
-        new_re->getReply()->Cancel();
-        delete new_re;
-      });
+      connect(client_, SIGNAL(Ready()), re->getRequest(), SLOT(PostEvent()));
     }
   }
 };
@@ -242,8 +255,8 @@ class CancelRequestTransition : public RequestTransition {
       : RequestTransition(client, auth_required_) {}
 
   virtual void onTransition(QEvent* event) {
-    GSReply* reply = static_cast<ReqEvent*>(event)->getReply();
-    reply->Cancel();
+    GSRequest* request = static_cast<ReqEvent*>(event)->getRequest();
+    request->CancelRequest();
   }
 };
 

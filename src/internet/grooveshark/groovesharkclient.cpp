@@ -42,7 +42,6 @@ GSClient::GSClient(QObject* parent)
 
   ctoken_timer_->setSingleShot(true);
   ctoken_timer_->setInterval(kCTokenTimeout);
-  connect(ctoken_timer_, SIGNAL(timeout()), this, SLOT(CTokenExpired()));
   connect(this, SIGNAL(Fault()), this, SLOT(OnFault()));
 
   SetupSM();
@@ -224,12 +223,6 @@ void GSClient::SetupSM() {
   sm_->start();
 }
 
-void GSClient::DebugSlotMark() {
-  qLog(Debug) << "==============================="
-              << "mark"
-              << "===========================";
-}
-
 void GSClient::DebugSlot(QString str) {
   qLog(Debug) << "===============================" << str
               << "===========================";
@@ -352,8 +345,8 @@ QNetworkReply* GSClient::makeRequest(const QString& method,
   return reply;
 }
 
-void GSClient::makeRequest(GSReply* reply) {
-  reply->setReply(makeRequest(reply->method_, reply->parameters_));
+void GSClient::makeRequest(GSRequest* request) {
+  request->getReply()->setReply(makeRequest(request->getMethod(), request->getParameters()));
 }
 
 void GSClient::ClearSession() {
@@ -375,9 +368,11 @@ GSReply* GSClient::Request(const QString method, const QList<Param> parameters,
   }
 
   GSReply* gsreply = new GSReply(this);
-  gsreply->setRequest(method, params, auth_required, type);
+  GSRequest* gsreq = new GSRequest(this, gsreply, method, params, auth_required, type);
+  gsreply->setRequest(gsreq);
+  if (type != SysRequestEventType) connect(this, SIGNAL(Fault()), gsreq, SLOT(CancelRequest()));
 
-  sm_->postEvent(new ReqEvent(type, gsreply));
+  sm_->postEvent(new ReqEvent(gsreq));
 
   return gsreply;
 }
@@ -385,19 +380,14 @@ GSReply* GSClient::Request(const QString method, const QList<Param> parameters,
 void GSReply::setReply(QNetworkReply* reply) {
   timer_.stop();
   reply_ = reply;
-  reply_->setParent(this);
   connect(reply, SIGNAL(finished()), this, SLOT(ProcessReply()));
-  connect(reply, SIGNAL(destroyed()), client_, SLOT(DebugSlotMark()));
+  connect(this, SIGNAL(destroyed()), reply_, SLOT(deleteLater()));
   connect(&timer_, SIGNAL(timeout()), this, SLOT(ProcessReply()));
   timer_.start();
 }
 
-void GSReply::setRequest(const QString method, const QVariantMap parameters,
-                         bool auth_required, QEvent::Type type) {
-  method_ = method;
-  parameters_ = parameters;
-  auth_required_ = auth_required;
-  type_ = type;
+void GSReply::setRequest(GSRequest* request) {
+  request_ = request;
 }
 
 void GSReply::Cancel() {
@@ -463,7 +453,7 @@ void GSReply::ProcessReply() {
   QByteArray raw = reply_->readAll();
   qLog(Debug) << raw
               << "-----------------------------------------GSReply-------"
-              << method_ << parameters_ << "\n";
+              << request_->getMethod() << request_->getParameters() << "\n";
   QVariantMap result = parser.parse(raw, &ok).toMap();
   if (!ok) {
     SetError(GSClient::Error_ParseError,
@@ -473,7 +463,7 @@ void GSReply::ProcessReply() {
   }
 
   if (ProcessReplyError(result)) {
-    client_->PostEvent(new ReqEvent(type_, this));
+    client_->PostEvent(new ReqEvent(request_));
     return;
   }
 
@@ -481,4 +471,5 @@ void GSReply::ProcessReply() {
   emit Finished();
 }
 
-void GSClient::CTokenExpired() { qLog(Debug) << Q_FUNC_INFO; }
+
+ReqEvent::ReqEvent(GSRequest *request) : QEvent(request->getType()), request_(request) {}
