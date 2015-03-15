@@ -14,6 +14,7 @@
 # Irfan YAZICI <irfanyazici@gmail.com>, 2011
 # Kadir Celep <kadirche@gmail.com>, 2012
 # Muhammet Kara <muhammetk@gmail.com>, 2012
+# Muhammet Kara <muhammetk@gmail.com>, 2015
 # Murat Ikilik <>, 2012
 # Murat Sahin <martinamca@gmail.com>, 2012
 # Mustafa YILMAZ <apshalasha@gmail.com>, 2013
@@ -24,8 +25,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-02-19 16:25+0000\n"
-"Last-Translator: Volkan Gezer <volkangezer@gmail.com>\n"
+"PO-Revision-Date: 2015-03-07 22:27+0000\n"
+"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/clementine/language/tr/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -86,12 +87,12 @@ msgstr "%1 (%2 şarkı)"
 msgid "%1 albums"
 msgstr "%1 albüm"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 #, qt-format
 msgid "%1 days"
 msgstr "%1 gün"
 
-#: core/utilities.cpp:140
+#: core/utilities.cpp:139
 #, qt-format
 msgid "%1 days ago"
 msgstr "%1 gün önce"
@@ -161,19 +162,19 @@ msgstr "%L1 toplam çalma"
 msgid "%filename%"
 msgstr "%filename%"
 
-#: transcoder/transcodedialog.cpp:213
+#: transcoder/transcodedialog.cpp:214
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n failed"
 msgstr "%n başarısız"
 
-#: transcoder/transcodedialog.cpp:208
+#: transcoder/transcodedialog.cpp:209
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n finished"
 msgstr "%n tamamlandı"
 
-#: transcoder/transcodedialog.cpp:202
+#: transcoder/transcodedialog.cpp:203
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n remaining"
@@ -272,7 +273,7 @@ msgstr "0:00:00"
 msgid "0px"
 msgstr "0px"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 msgid "1 day"
 msgstr "1 gün"
 
@@ -289,7 +290,7 @@ msgstr "128k MP3"
 msgid "40%"
 msgstr "40%"
 
-#: library/library.cpp:65
+#: library/library.cpp:64
 msgid "50 random tracks"
 msgstr "50 rastgele parça"
 
@@ -480,12 +481,12 @@ msgstr "Dosyayı/dosyaları dönüştürücüye ekle"
 msgid "Add file..."
 msgstr "Dosya ekle..."
 
-#: transcoder/transcodedialog.cpp:223
+#: transcoder/transcodedialog.cpp:224
 msgid "Add files to transcode"
 msgstr "Dönüştürülecek dosyaları ekle"
 
-#: transcoder/transcodedialog.cpp:305 ui/mainwindow.cpp:1857
-#: ripper/ripcddialog.cpp:184
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr "Klasör ekle"
 
@@ -751,7 +752,7 @@ msgstr "Tüm çalma listeleri (%1)"
 msgid "All the translators"
 msgstr "Tüm çevirmenler"
 
-#: library/library.cpp:101
+#: library/library.cpp:98
 msgid "All tracks"
 msgstr "Tüm parçalar"
 
@@ -1047,6 +1048,10 @@ msgstr "Önbellek süresi"
 msgid "Buffering"
 msgstr "Arabelleğe alınıyor"
 
+#: internet/seafile/seafileservice.cpp:226
+msgid "Building Seafile index..."
+msgstr "Seafile dizini oluşturuluyor..."
+
 #: ../bin/src/ui_globalsearchview.h:211
 msgid "But these sources are disabled:"
 msgstr "Ancak şu kaynaklar devre dışı:"
@@ -1063,7 +1068,7 @@ msgstr "Öntanımlı olarak, Grooveshark şarkıları eklenme tarihine göre sı
 msgid "CDDA"
 msgstr "CDDA"
 
-#: library/library.cpp:121
+#: library/library.cpp:117
 msgid "CUE sheet support"
 msgstr "CUE desteği"
 
@@ -2007,7 +2012,7 @@ msgstr "Süre"
 msgid "Dynamic mode is on"
 msgstr "Dinamik kip açık"
 
-#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:115
+#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:111
 msgid "Dynamic random mix"
 msgstr "Dinamik rastgele karışım"
 
@@ -2160,7 +2165,7 @@ msgstr "--log-levels *:3'e eşdeğer"
 msgid "Error"
 msgstr "Hata"
 
-#: ripper/ripcddialog.cpp:134
+#: ripper/ripcddialog.cpp:135
 msgid "Error Ripping CD"
 msgstr "CD Kopyalanırken Hata"
 
@@ -2199,7 +2204,7 @@ msgstr "%1 işlenirken hata: %2"
 msgid "Error while loading audio CD"
 msgstr "Ses CD'si yüklenirken hata"
 
-#: library/library.cpp:69
+#: library/library.cpp:68
 msgid "Ever played"
 msgstr "Önceden çalınmış"
 
@@ -2354,7 +2359,7 @@ msgstr "Hızlı"
 msgid "Favorites"
 msgstr "Favoriler"
 
-#: library/library.cpp:91
+#: library/library.cpp:88
 msgid "Favourite tracks"
 msgstr "Beğenilen parçalar"
 
@@ -2767,12 +2772,12 @@ msgstr "Resimler (*.png *.jpg *.jpeg *.bmp *.xpm *.pbm *.ppm *.xbm)"
 msgid "Import..."
 msgstr "İçe aktar..."
 
-#: core/utilities.cpp:152
+#: core/utilities.cpp:151
 #, qt-format
 msgid "In %1 days"
 msgstr "%1 günde"
 
-#: core/utilities.cpp:155
+#: core/utilities.cpp:154
 #, qt-format
 msgid "In %1 weeks"
 msgstr "%1 haftada"
@@ -2982,7 +2987,7 @@ msgstr "Büyük albüm kapağı (ayrıntı yok)"
 msgid "Large sidebar"
 msgstr "Büyük kenar çubuğu"
 
-#: library/library.cpp:83
+#: library/library.cpp:80
 msgid "Last played"
 msgstr "Son çalınan"
 
@@ -3019,7 +3024,7 @@ msgstr "Last.fm kullanıcı adı"
 msgid "Last.fm wiki"
 msgstr "Last.fm wiki"
 
-#: library/library.cpp:105
+#: library/library.cpp:102
 msgid "Least favourite tracks"
 msgstr "Az beğenilen parçalar"
 
@@ -3281,7 +3286,7 @@ msgstr "En fazla genel arama sonucu"
 msgid "Maximum bitrate"
 msgstr "Maksimum bit oranı"
 
-#: ripper/ripcddialog.cpp:135
+#: ripper/ripcddialog.cpp:136
 msgid "Media has changed. Reloading"
 msgstr "Ortam değişti. Yeniden yükleniyor"
 
@@ -3344,7 +3349,7 @@ msgstr "Atmosfer çubukları"
 msgid "More"
 msgstr "Daha fazla"
 
-#: library/library.cpp:87
+#: library/library.cpp:84
 msgid "Most played"
 msgstr "En fazla çalınan"
 
@@ -3370,7 +3375,7 @@ msgstr "Kütüphaneye taşı..."
 msgid "Move up"
 msgstr "Yukarı taşı"
 
-#: transcoder/transcodedialog.cpp:224 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr "Müzik"
@@ -3428,7 +3433,7 @@ msgstr "Ağ Denetimi"
 msgid "Never"
 msgstr "Hiçbir zaman"
 
-#: library/library.cpp:76
+#: library/library.cpp:74
 msgid "Never played"
 msgstr "Hiç çalınmamış"
 
@@ -3459,7 +3464,7 @@ msgstr "Yeni şarkılar"
 msgid "New tracks will be added automatically."
 msgstr "Yeni parçalar otomatik olarak eklenecektir."
 
-#: library/library.cpp:95
+#: library/library.cpp:92
 msgid "Newest tracks"
 msgstr "En yeni parçalar"
 
@@ -3472,7 +3477,7 @@ msgstr "İleri"
 msgid "Next track"
 msgstr "Sonraki parça"
 
-#: core/utilities.cpp:153
+#: core/utilities.cpp:152
 msgid "Next week"
 msgstr "Gelecek hafta"
 
@@ -3652,7 +3657,7 @@ msgstr "OPML dosyası aç"
 msgid "Open OPML file..."
 msgstr "OPML dosyasını aç..."
 
-#: transcoder/transcodedialog.cpp:239
+#: transcoder/transcodedialog.cpp:240
 msgid "Open a directory to import music from"
 msgstr "Müziğin içe aktarılacağı bir dizin aç"
 
@@ -4312,7 +4317,7 @@ msgstr "Sağ"
 msgid "Rip"
 msgstr "Dönüştür"
 
-#: ripper/ripcddialog.cpp:94
+#: ripper/ripcddialog.cpp:95
 msgid "Rip CD"
 msgstr "CD Dönüştür"
 
@@ -4400,7 +4405,7 @@ msgstr "Mümkün olduğunda istatistikleri dosya etiketlerine kaydet"
 msgid "Save this stream in the Internet tab"
 msgstr "Bu akışı Internet sekmesine kaydet"
 
-#: library/library.cpp:196
+#: library/library.cpp:193
 msgid "Saving songs statistics into songs files"
 msgstr "Şarkı istatistikleri şarkı dosyalarına kaydediliyor"
 
@@ -4908,7 +4913,7 @@ msgstr "Standart"
 msgid "Starred"
 msgstr "Yıldızlı"
 
-#: ripper/ripcddialog.cpp:68
+#: ripper/ripcddialog.cpp:69
 msgid "Start ripping"
 msgstr "Dönüştürmeyi başlat"
 
@@ -5237,7 +5242,7 @@ msgid ""
 "Grooveshark songs"
 msgstr "Grooveshark radyosu dinleyebilmeniz için öncelikle birkaç tane Grooveshark şarkısı dinlemelisiniz."
 
-#: core/utilities.cpp:138 core/utilities.cpp:150
+#: core/utilities.cpp:137 core/utilities.cpp:149
 msgid "Today"
 msgstr "Bugün"
 
@@ -5261,7 +5266,7 @@ msgstr "Skroplamayı aç/kapa"
 msgid "Toggle visibility for the pretty on-screen-display"
 msgstr "Şirin OSD görünürlüğünü aç/kapa"
 
-#: core/utilities.cpp:151
+#: core/utilities.cpp:150
 msgid "Tomorrow"
 msgstr "Yarın"
 
@@ -5416,7 +5421,7 @@ msgstr "Bu podcast'ı güncelle"
 msgid "Updating"
 msgstr "Güncelliyor"
 
-#: library/librarywatcher.cpp:94
+#: library/librarywatcher.cpp:92
 #, qt-format
 msgid "Updating %1"
 msgstr "%1 Güncelleniyor"
@@ -5426,7 +5431,7 @@ msgstr "%1 Güncelleniyor"
 msgid "Updating %1%..."
 msgstr "%1% Güncelleniyor..."
 
-#: library/librarywatcher.cpp:92
+#: library/librarywatcher.cpp:90
 msgid "Updating library"
 msgstr "Kütüphane güncelleniyor"
 
@@ -5727,7 +5732,7 @@ msgstr "Yıl - Albüm"
 msgid "Years"
 msgstr "Yıl"
 
-#: core/utilities.cpp:139
+#: core/utilities.cpp:138
 msgid "Yesterday"
 msgstr "Dün"
 

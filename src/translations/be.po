@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-02-19 15:24+0000\n"
+"PO-Revision-Date: 2015-03-02 11:57+0000\n"
 "Last-Translator: Clementine Buildbot <clementinebuildbot@davidsansome.com>\n"
 "Language-Team: Belarusian (http://www.transifex.com/projects/p/clementine/language/be/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,12 +73,12 @@ msgstr ""
 msgid "%1 albums"
 msgstr "%1 альбом(аў)"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 #, qt-format
 msgid "%1 days"
 msgstr "%1 дзён"
 
-#: core/utilities.cpp:140
+#: core/utilities.cpp:139
 #, qt-format
 msgid "%1 days ago"
 msgstr "%1 дзён таму"
@@ -148,19 +148,19 @@ msgstr "%L1 прайграваньняў увогуле"
 msgid "%filename%"
 msgstr "%filename%"
 
-#: transcoder/transcodedialog.cpp:213
+#: transcoder/transcodedialog.cpp:214
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n failed"
 msgstr "%n з памылкай"
 
-#: transcoder/transcodedialog.cpp:208
+#: transcoder/transcodedialog.cpp:209
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n finished"
 msgstr "%n завершана"
 
-#: transcoder/transcodedialog.cpp:202
+#: transcoder/transcodedialog.cpp:203
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n remaining"
@@ -259,7 +259,7 @@ msgstr "0:00:00"
 msgid "0px"
 msgstr "0px"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 msgid "1 day"
 msgstr "1 дзень"
 
@@ -276,7 +276,7 @@ msgstr "128к MP3"
 msgid "40%"
 msgstr "40%"
 
-#: library/library.cpp:65
+#: library/library.cpp:64
 msgid "50 random tracks"
 msgstr "50 выпадковых трэкаў"
 
@@ -467,12 +467,12 @@ msgstr ""
 msgid "Add file..."
 msgstr "Дадаць файл..."
 
-#: transcoder/transcodedialog.cpp:223
+#: transcoder/transcodedialog.cpp:224
 msgid "Add files to transcode"
 msgstr "Дадаць файлы для перакадаваньня"
 
-#: transcoder/transcodedialog.cpp:305 ui/mainwindow.cpp:1857
-#: ripper/ripcddialog.cpp:184
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr "Дадаць каталёг"
 
@@ -738,7 +738,7 @@ msgstr "Усе спісы прайгравання (%1)"
 msgid "All the translators"
 msgstr "Усе перакладчыкі"
 
-#: library/library.cpp:101
+#: library/library.cpp:98
 msgid "All tracks"
 msgstr "Усе кампазіцыі"
 
@@ -1034,6 +1034,10 @@ msgstr "Працяжнасьць буфэру"
 msgid "Buffering"
 msgstr "Буфэрызацыя"
 
+#: internet/seafile/seafileservice.cpp:226
+msgid "Building Seafile index..."
+msgstr ""
+
 #: ../bin/src/ui_globalsearchview.h:211
 msgid "But these sources are disabled:"
 msgstr "Гэтыя крыніцы адключаныя:"
@@ -1050,7 +1054,7 @@ msgstr ""
 msgid "CDDA"
 msgstr "CDDA"
 
-#: library/library.cpp:121
+#: library/library.cpp:117
 msgid "CUE sheet support"
 msgstr "Падтрымка CUE"
 
@@ -1994,7 +1998,7 @@ msgstr ""
 msgid "Dynamic mode is on"
 msgstr "Дынамічны рэжым уключаны"
 
-#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:115
+#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:111
 msgid "Dynamic random mix"
 msgstr "Выпадковы дынамічны мікс"
 
@@ -2147,7 +2151,7 @@ msgstr "Аналягічна --log-levels *:3"
 msgid "Error"
 msgstr "Памылка"
 
-#: ripper/ripcddialog.cpp:134
+#: ripper/ripcddialog.cpp:135
 msgid "Error Ripping CD"
 msgstr ""
 
@@ -2186,7 +2190,7 @@ msgstr "Памылка пры апрацоўке %1: %2"
 msgid "Error while loading audio CD"
 msgstr "Памылка пры загрузке Аўдыё CD"
 
-#: library/library.cpp:69
+#: library/library.cpp:68
 msgid "Ever played"
 msgstr "Прайграных хоць калі"
 
@@ -2341,7 +2345,7 @@ msgstr "Хутка"
 msgid "Favorites"
 msgstr "Улюбёныя"
 
-#: library/library.cpp:91
+#: library/library.cpp:88
 msgid "Favourite tracks"
 msgstr "Улюбёныя трэкі"
 
@@ -2754,12 +2758,12 @@ msgstr "Выявы (*.png *.jpg *.jpeg *.bmp *.xpm *.pbm *.ppm *.xbm)"
 msgid "Import..."
 msgstr ""
 
-#: core/utilities.cpp:152
+#: core/utilities.cpp:151
 #, qt-format
 msgid "In %1 days"
 msgstr "Праз %1 дзён (дні)"
 
-#: core/utilities.cpp:155
+#: core/utilities.cpp:154
 #, qt-format
 msgid "In %1 weeks"
 msgstr "Праз %1 тыдняў (тыдні)"
@@ -2969,7 +2973,7 @@ msgstr ""
 msgid "Large sidebar"
 msgstr "Шырокая бакавая панэль"
 
-#: library/library.cpp:83
+#: library/library.cpp:80
 msgid "Last played"
 msgstr "Апошняе праслуханае"
 
@@ -3006,7 +3010,7 @@ msgstr "Логін Last.fm"
 msgid "Last.fm wiki"
 msgstr "Last.fm wiki"
 
-#: library/library.cpp:105
+#: library/library.cpp:102
 msgid "Least favourite tracks"
 msgstr "Найменш улюбёныя трэкі"
 
@@ -3268,7 +3272,7 @@ msgstr ""
 msgid "Maximum bitrate"
 msgstr "Максымальны бітрэйт"
 
-#: ripper/ripcddialog.cpp:135
+#: ripper/ripcddialog.cpp:136
 msgid "Media has changed. Reloading"
 msgstr ""
 
@@ -3331,7 +3335,7 @@ msgstr "Панэлі Настрою"
 msgid "More"
 msgstr ""
 
-#: library/library.cpp:87
+#: library/library.cpp:84
 msgid "Most played"
 msgstr "Найчасьцей праслуханае"
 
@@ -3357,7 +3361,7 @@ msgstr "Перамясьціць у бібліятэку"
 msgid "Move up"
 msgstr "Перамясьціць вышэй"
 
-#: transcoder/transcodedialog.cpp:224 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr "Музыка"
@@ -3415,7 +3419,7 @@ msgstr "Сеткавае кіраваньне"
 msgid "Never"
 msgstr "Ніколі"
 
-#: library/library.cpp:76
+#: library/library.cpp:74
 msgid "Never played"
 msgstr "Ніколі не праслухоўвалася"
 
@@ -3446,7 +3450,7 @@ msgstr "Новыя песьні"
 msgid "New tracks will be added automatically."
 msgstr "Новыя трэкі будуць даданыя аўтаматычна"
 
-#: library/library.cpp:95
+#: library/library.cpp:92
 msgid "Newest tracks"
 msgstr "Новыя трэкі"
 
@@ -3459,7 +3463,7 @@ msgstr "Далей"
 msgid "Next track"
 msgstr "Наступны трэк"
 
-#: core/utilities.cpp:153
+#: core/utilities.cpp:152
 msgid "Next week"
 msgstr "На наступным тыдні"
 
@@ -3639,7 +3643,7 @@ msgstr "Адкрыць файл OPML"
 msgid "Open OPML file..."
 msgstr "Адкрыць файл OPML..."
 
-#: transcoder/transcodedialog.cpp:239
+#: transcoder/transcodedialog.cpp:240
 msgid "Open a directory to import music from"
 msgstr ""
 
@@ -4299,7 +4303,7 @@ msgstr "Правы"
 msgid "Rip"
 msgstr ""
 
-#: ripper/ripcddialog.cpp:94
+#: ripper/ripcddialog.cpp:95
 msgid "Rip CD"
 msgstr ""
 
@@ -4387,7 +4391,7 @@ msgstr "Захоўваць статыстыку ў тэгах файлаў, ка
 msgid "Save this stream in the Internet tab"
 msgstr "Захаваць гэты струмень ў закладцы Інтэрнэт"
 
-#: library/library.cpp:196
+#: library/library.cpp:193
 msgid "Saving songs statistics into songs files"
 msgstr "Захаваньне статыстыкі песень у файлы"
 
@@ -4895,7 +4899,7 @@ msgstr "Стандартны"
 msgid "Starred"
 msgstr "Ацэненыя"
 
-#: ripper/ripcddialog.cpp:68
+#: ripper/ripcddialog.cpp:69
 msgid "Start ripping"
 msgstr ""
 
@@ -5224,7 +5228,7 @@ msgid ""
 "Grooveshark songs"
 msgstr "Каб уключыць радыё Grooveshark, трэба спачатку праслухаць некалькі іншых песень на гэтым сэрвісе"
 
-#: core/utilities.cpp:138 core/utilities.cpp:150
+#: core/utilities.cpp:137 core/utilities.cpp:149
 msgid "Today"
 msgstr "Сёньня"
 
@@ -5248,7 +5252,7 @@ msgstr "Укл/Выкл скроблінг"
 msgid "Toggle visibility for the pretty on-screen-display"
 msgstr "Паказаць/Скрыць экраннае апавяшчэньне"
 
-#: core/utilities.cpp:151
+#: core/utilities.cpp:150
 msgid "Tomorrow"
 msgstr "Заўтра"
 
@@ -5403,7 +5407,7 @@ msgstr "Абнавіць гэты подкаст"
 msgid "Updating"
 msgstr "Абнаўленьне"
 
-#: library/librarywatcher.cpp:94
+#: library/librarywatcher.cpp:92
 #, qt-format
 msgid "Updating %1"
 msgstr "Абнаўленьне %1"
@@ -5413,7 +5417,7 @@ msgstr "Абнаўленьне %1"
 msgid "Updating %1%..."
 msgstr "Абнаўленьне %1%..."
 
-#: library/librarywatcher.cpp:92
+#: library/librarywatcher.cpp:90
 msgid "Updating library"
 msgstr "Абнаўленьне бібліятэкі"
 
@@ -5714,7 +5718,7 @@ msgstr "Год - Альбом"
 msgid "Years"
 msgstr "Годы"
 
-#: core/utilities.cpp:139
+#: core/utilities.cpp:138
 msgid "Yesterday"
 msgstr "Учора"
 

@@ -278,6 +278,7 @@ void GroovesharkService::SearchSongsFinished(GSReply* reply) {
   task_search_id_ = 0;
 
   // Fill results list
+  if (!search_) return;
   for (const Song& song : songs) {
     QStandardItem* child = CreateSongItem(song);
     search_->appendRow(child);

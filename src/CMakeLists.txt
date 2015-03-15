@@ -106,6 +106,7 @@ set(SOURCES
   core/stylesheetloader.cpp
   core/tagreaderclient.cpp
   core/taskmanager.cpp
+  core/thread.cpp
   core/urlhandler.cpp
   core/utilities.cpp
 
@@ -865,7 +866,6 @@ optional_source(APPLE
     core/macfslistener.mm
     core/macglobalshortcutbackend.mm
     core/mac_startup.mm
-    core/scoped_nsautorelease_pool.mm
     devices/macdevicelister.mm
     engines/osxdevicefinder.cpp
     networkremote/bonjour.mm

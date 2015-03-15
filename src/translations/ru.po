@@ -34,7 +34,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-02-20 19:00+0000\n"
+"PO-Revision-Date: 2015-03-02 12:55+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/clementine/language/ru/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,12 +96,12 @@ msgstr "%1 (%2 композиций)"
 msgid "%1 albums"
 msgstr "%1 альбомов"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 #, qt-format
 msgid "%1 days"
 msgstr "%1 дней"
 
-#: core/utilities.cpp:140
+#: core/utilities.cpp:139
 #, qt-format
 msgid "%1 days ago"
 msgstr "%1 дней назад"
@@ -171,19 +171,19 @@ msgstr "всего %L1 прослушиваний"
 msgid "%filename%"
 msgstr "%filename%"
 
-#: transcoder/transcodedialog.cpp:213
+#: transcoder/transcodedialog.cpp:214
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n failed"
 msgstr "%n с ошибкой"
 
-#: transcoder/transcodedialog.cpp:208
+#: transcoder/transcodedialog.cpp:209
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n finished"
 msgstr "%n завершено"
 
-#: transcoder/transcodedialog.cpp:202
+#: transcoder/transcodedialog.cpp:203
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n remaining"
@@ -282,7 +282,7 @@ msgstr "0:00:00"
 msgid "0px"
 msgstr "0px"
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 msgid "1 day"
 msgstr "1 день"
 
@@ -299,7 +299,7 @@ msgstr "128 кбит/c MP3"
 msgid "40%"
 msgstr "40%"
 
-#: library/library.cpp:65
+#: library/library.cpp:64
 msgid "50 random tracks"
 msgstr "50 случайных треков"
 
@@ -490,12 +490,12 @@ msgstr "Конвертировать файл(ы)"
 msgid "Add file..."
 msgstr "Добавить файл..."
 
-#: transcoder/transcodedialog.cpp:223
+#: transcoder/transcodedialog.cpp:224
 msgid "Add files to transcode"
 msgstr "Конвертировать файлы"
 
-#: transcoder/transcodedialog.cpp:305 ui/mainwindow.cpp:1857
-#: ripper/ripcddialog.cpp:184
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr "Добавить папку"
 
@@ -699,7 +699,7 @@ msgstr "Альбом"
 
 #: ../bin/src/ui_playbacksettingspage.h:328
 msgid "Album (ideal loudness for all tracks)"
-msgstr "Альбом (идеальная громкость всех дорожек)"
+msgstr "Альбом (идеальная громкость всех треков)"
 
 #: playlist/playlist.cpp:1323 ui/organisedialog.cpp:64
 #: ../bin/src/ui_groupbydialog.h:131 ../bin/src/ui_groupbydialog.h:146
@@ -761,7 +761,7 @@ msgstr "Все плейлисты (%1)"
 msgid "All the translators"
 msgstr "Всех переводчиков"
 
-#: library/library.cpp:101
+#: library/library.cpp:98
 msgid "All tracks"
 msgstr "Все композиции"
 
@@ -1057,6 +1057,10 @@ msgstr "Размер буфера"
 msgid "Buffering"
 msgstr "Буферизация"
 
+#: internet/seafile/seafileservice.cpp:226
+msgid "Building Seafile index..."
+msgstr "Построение индекса Seafile..."
+
 #: ../bin/src/ui_globalsearchview.h:211
 msgid "But these sources are disabled:"
 msgstr "Эти источники отключены:"
@@ -1073,7 +1077,7 @@ msgstr "По умолчанию Grooveshark сортирует песни по �
 msgid "CDDA"
 msgstr "CDDA"
 
-#: library/library.cpp:121
+#: library/library.cpp:117
 msgid "CUE sheet support"
 msgstr "Поддержка файлов разметки CUE"
 
@@ -1949,7 +1953,7 @@ msgstr "Загрузка добавлена в очередь"
 
 #: ../bin/src/ui_networkremotesettingspage.h:246
 msgid "Download settings"
-msgstr "Настройки скачивания"
+msgstr "Настройки загрузки"
 
 #: ../bin/src/ui_networkremotesettingspage.h:253
 msgid "Download the Android app"
@@ -2017,7 +2021,7 @@ msgstr "Длительность"
 msgid "Dynamic mode is on"
 msgstr "Динамический режим включён"
 
-#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:115
+#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:111
 msgid "Dynamic random mix"
 msgstr "Случайный динамичный микс"
 
@@ -2170,7 +2174,7 @@ msgstr "Аналогично --log-levels *:3"
 msgid "Error"
 msgstr "Ошибка"
 
-#: ripper/ripcddialog.cpp:134
+#: ripper/ripcddialog.cpp:135
 msgid "Error Ripping CD"
 msgstr "Ошибка конвертирования CD"
 
@@ -2209,7 +2213,7 @@ msgstr "Ошибка при обработке %1: %2"
 msgid "Error while loading audio CD"
 msgstr "Ошибка при загрузке аудио-диска"
 
-#: library/library.cpp:69
+#: library/library.cpp:68
 msgid "Ever played"
 msgstr "Когда-либо проигранных"
 
@@ -2364,7 +2368,7 @@ msgstr "Быстрое"
 msgid "Favorites"
 msgstr "Избранное"
 
-#: library/library.cpp:91
+#: library/library.cpp:88
 msgid "Favourite tracks"
 msgstr "Любимые треки"
 
@@ -2615,7 +2619,7 @@ msgstr "Получено %1 обложек из %2 (%3 загрузить не �
 
 #: ../bin/src/ui_behavioursettingspage.h:274
 msgid "Grey out non existent songs in my playlists"
-msgstr "Отмечать серым не существующие песни в моих плейлистах"
+msgstr "Отмечать серым несуществующие песни в моих плейлистах"
 
 #: ../bin/src/ui_groovesharksettingspage.h:137
 msgid "Grooveshark"
@@ -2777,12 +2781,12 @@ msgstr "Изображения (*.png *.jpg *.jpeg *.bmp *.xpm *.pbm *.ppm *.xbm
 msgid "Import..."
 msgstr "Импорт..."
 
-#: core/utilities.cpp:152
+#: core/utilities.cpp:151
 #, qt-format
 msgid "In %1 days"
 msgstr "В течение %1 дней"
 
-#: core/utilities.cpp:155
+#: core/utilities.cpp:154
 #, qt-format
 msgid "In %1 weeks"
 msgstr "В течение %1 недель"
@@ -2992,7 +2996,7 @@ msgstr "Большая обложка альбома (без сведений)"
 msgid "Large sidebar"
 msgstr "Широкая боковая панель"
 
-#: library/library.cpp:83
+#: library/library.cpp:80
 msgid "Last played"
 msgstr "Последнее прослушивание"
 
@@ -3029,7 +3033,7 @@ msgstr "Имя пользователя Last.fm"
 msgid "Last.fm wiki"
 msgstr "Last.fm wiki страничка"
 
-#: library/library.cpp:105
+#: library/library.cpp:102
 msgid "Least favourite tracks"
 msgstr "Нелюбимые треки"
 
@@ -3291,7 +3295,7 @@ msgstr "Максимум результатов глобального поис�
 msgid "Maximum bitrate"
 msgstr "Максимальный битрейт"
 
-#: ripper/ripcddialog.cpp:135
+#: ripper/ripcddialog.cpp:136
 msgid "Media has changed. Reloading"
 msgstr "Источник медиа сменился. Перезагрузка"
 
@@ -3354,7 +3358,7 @@ msgstr "Индикатор тона"
 msgid "More"
 msgstr "Ещё"
 
-#: library/library.cpp:87
+#: library/library.cpp:84
 msgid "Most played"
 msgstr "Наиболее прослушиваемые"
 
@@ -3380,7 +3384,7 @@ msgstr "Переместить в фонотеку..."
 msgid "Move up"
 msgstr "Переместить вверх"
 
-#: transcoder/transcodedialog.cpp:224 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr "Музыка"
@@ -3438,7 +3442,7 @@ msgstr "Удалённое управление"
 msgid "Never"
 msgstr "Никогда"
 
-#: library/library.cpp:76
+#: library/library.cpp:74
 msgid "Never played"
 msgstr "Никогда не прослушивались"
 
@@ -3469,7 +3473,7 @@ msgstr "Новые композиции"
 msgid "New tracks will be added automatically."
 msgstr "Новые треки будут добавлены автоматически."
 
-#: library/library.cpp:95
+#: library/library.cpp:92
 msgid "Newest tracks"
 msgstr "Последние треки"
 
@@ -3482,7 +3486,7 @@ msgstr "Дальше"
 msgid "Next track"
 msgstr "Следующий трек"
 
-#: core/utilities.cpp:153
+#: core/utilities.cpp:152
 msgid "Next week"
 msgstr "На следующей неделе"
 
@@ -3662,7 +3666,7 @@ msgstr "Открыть файл OPML"
 msgid "Open OPML file..."
 msgstr "Открыть файл OPML..."
 
-#: transcoder/transcodedialog.cpp:239
+#: transcoder/transcodedialog.cpp:240
 msgid "Open a directory to import music from"
 msgstr "Открыть папку для импортирования музыки"
 
@@ -4052,7 +4056,7 @@ msgstr "Трек в очередь"
 
 #: ../bin/src/ui_playbacksettingspage.h:327
 msgid "Radio (equal loudness for all tracks)"
-msgstr "Радио (одинаковая громкость для всех дорожек)"
+msgstr "Радио (одинаковая громкость для всех треков)"
 
 #: internet/grooveshark/groovesharkservice.cpp:613
 msgid "Radios"
@@ -4283,7 +4287,7 @@ msgstr "Сбросить счётчики воспроизведения"
 
 #: ../bin/src/ui_behavioursettingspage.h:290
 msgid "Restart song, then jump to previous if pressed again"
-msgstr "Перезапускать песню, когда переход к предыдущей нажат снова"
+msgstr "Перезапустит песню, когда переход к предыдущей нажат снова"
 
 #: core/commandlineoptions.cpp:164
 msgid ""
@@ -4322,7 +4326,7 @@ msgstr "Правый канал"
 msgid "Rip"
 msgstr "Конвертировать"
 
-#: ripper/ripcddialog.cpp:94
+#: ripper/ripcddialog.cpp:95
 msgid "Rip CD"
 msgstr "Конвертировать CD"
 
@@ -4410,7 +4414,7 @@ msgstr "Сохранять статистику в файлы если возм�
 msgid "Save this stream in the Internet tab"
 msgstr "Сохранить этот поток во вкладке Интернет"
 
-#: library/library.cpp:196
+#: library/library.cpp:193
 msgid "Saving songs statistics into songs files"
 msgstr "Сохранение статистики композиций в файлы"
 
@@ -4595,7 +4599,7 @@ msgstr "Установить громкость в <value> процентов"
 
 #: ../bin/src/ui_mainwindow.h:662
 msgid "Set value for all selected tracks..."
-msgstr "Установить значение для всех выделенных композиций..."
+msgstr "Установить значение для всех выделенных треков..."
 
 #: ../bin/src/ui_networkremotesettingspage.h:224
 msgid "Settings"
@@ -4918,7 +4922,7 @@ msgstr "Стандартнoe"
 msgid "Starred"
 msgstr "Оцененные"
 
-#: ripper/ripcddialog.cpp:68
+#: ripper/ripcddialog.cpp:69
 msgid "Start ripping"
 msgstr "Начать конвертирование"
 
@@ -5247,7 +5251,7 @@ msgid ""
 "Grooveshark songs"
 msgstr "Для включения радио Grooveshark требуется прослушать несколько композиций на Grooveshark"
 
-#: core/utilities.cpp:138 core/utilities.cpp:150
+#: core/utilities.cpp:137 core/utilities.cpp:149
 msgid "Today"
 msgstr "Сегодня"
 
@@ -5271,7 +5275,7 @@ msgstr "Вкл/выкл скробблинг"
 msgid "Toggle visibility for the pretty on-screen-display"
 msgstr "Переключить видимость OSD"
 
-#: core/utilities.cpp:151
+#: core/utilities.cpp:150
 msgid "Tomorrow"
 msgstr "Завтра"
 
@@ -5426,7 +5430,7 @@ msgstr "Обновить этот подкаст"
 msgid "Updating"
 msgstr "Обновление"
 
-#: library/librarywatcher.cpp:94
+#: library/librarywatcher.cpp:92
 #, qt-format
 msgid "Updating %1"
 msgstr "Идет обновление %1"
@@ -5436,7 +5440,7 @@ msgstr "Идет обновление %1"
 msgid "Updating %1%..."
 msgstr "Обновление %1%..."
 
-#: library/librarywatcher.cpp:92
+#: library/librarywatcher.cpp:90
 msgid "Updating library"
 msgstr "Обновление фонотеки"
 
@@ -5737,7 +5741,7 @@ msgstr "Год - Альбом"
 msgid "Years"
 msgstr "Годы"
 
-#: core/utilities.cpp:139
+#: core/utilities.cpp:138
 msgid "Yesterday"
 msgstr "Вчера"
 

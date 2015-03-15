@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-02-19 15:24+0000\n"
+"PO-Revision-Date: 2015-03-02 11:57+0000\n"
 "Last-Translator: Clementine Buildbot <clementinebuildbot@davidsansome.com>\n"
 "Language-Team: Interlingua (http://www.transifex.com/projects/p/clementine/language/ia/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,12 +71,12 @@ msgstr ""
 msgid "%1 albums"
 msgstr ""
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 #, qt-format
 msgid "%1 days"
 msgstr "%1 dies"
 
-#: core/utilities.cpp:140
+#: core/utilities.cpp:139
 #, qt-format
 msgid "%1 days ago"
 msgstr "%1 dies retro"
@@ -146,19 +146,19 @@ msgstr ""
 msgid "%filename%"
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:213
+#: transcoder/transcodedialog.cpp:214
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n failed"
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:208
+#: transcoder/transcodedialog.cpp:209
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n finished"
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:202
+#: transcoder/transcodedialog.cpp:203
 #, c-format, qt-plural-format
 msgctxt ""
 msgid "%n remaining"
@@ -257,7 +257,7 @@ msgstr ""
 msgid "0px"
 msgstr ""
 
-#: core/utilities.cpp:121
+#: core/utilities.cpp:120
 msgid "1 day"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "40%"
 msgstr ""
 
-#: library/library.cpp:65
+#: library/library.cpp:64
 msgid "50 random tracks"
 msgstr ""
 
@@ -465,12 +465,12 @@ msgstr ""
 msgid "Add file..."
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:223
+#: transcoder/transcodedialog.cpp:224
 msgid "Add files to transcode"
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:305 ui/mainwindow.cpp:1857
-#: ripper/ripcddialog.cpp:184
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr ""
 
@@ -736,7 +736,7 @@ msgstr ""
 msgid "All the translators"
 msgstr ""
 
-#: library/library.cpp:101
+#: library/library.cpp:98
 msgid "All tracks"
 msgstr ""
 
@@ -1032,6 +1032,10 @@ msgstr ""
 msgid "Buffering"
 msgstr ""
 
+#: internet/seafile/seafileservice.cpp:226
+msgid "Building Seafile index..."
+msgstr ""
+
 #: ../bin/src/ui_globalsearchview.h:211
 msgid "But these sources are disabled:"
 msgstr ""
@@ -1048,7 +1052,7 @@ msgstr ""
 msgid "CDDA"
 msgstr ""
 
-#: library/library.cpp:121
+#: library/library.cpp:117
 msgid "CUE sheet support"
 msgstr ""
 
@@ -1992,7 +1996,7 @@ msgstr ""
 msgid "Dynamic mode is on"
 msgstr ""
 
-#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:115
+#: internet/jamendo/jamendoservice.cpp:126 library/library.cpp:111
 msgid "Dynamic random mix"
 msgstr ""
 
@@ -2145,7 +2149,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ripper/ripcddialog.cpp:134
+#: ripper/ripcddialog.cpp:135
 msgid "Error Ripping CD"
 msgstr ""
 
@@ -2184,7 +2188,7 @@ msgstr ""
 msgid "Error while loading audio CD"
 msgstr ""
 
-#: library/library.cpp:69
+#: library/library.cpp:68
 msgid "Ever played"
 msgstr ""
 
@@ -2339,7 +2343,7 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-#: library/library.cpp:91
+#: library/library.cpp:88
 msgid "Favourite tracks"
 msgstr ""
 
@@ -2752,12 +2756,12 @@ msgstr ""
 msgid "Import..."
 msgstr ""
 
-#: core/utilities.cpp:152
+#: core/utilities.cpp:151
 #, qt-format
 msgid "In %1 days"
 msgstr ""
 
-#: core/utilities.cpp:155
+#: core/utilities.cpp:154
 #, qt-format
 msgid "In %1 weeks"
 msgstr ""
@@ -2967,7 +2971,7 @@ msgstr ""
 msgid "Large sidebar"
 msgstr ""
 
-#: library/library.cpp:83
+#: library/library.cpp:80
 msgid "Last played"
 msgstr ""
 
@@ -3004,7 +3008,7 @@ msgstr ""
 msgid "Last.fm wiki"
 msgstr ""
 
-#: library/library.cpp:105
+#: library/library.cpp:102
 msgid "Least favourite tracks"
 msgstr ""
 
@@ -3266,7 +3270,7 @@ msgstr ""
 msgid "Maximum bitrate"
 msgstr ""
 
-#: ripper/ripcddialog.cpp:135
+#: ripper/ripcddialog.cpp:136
 msgid "Media has changed. Reloading"
 msgstr ""
 
@@ -3329,7 +3333,7 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: library/library.cpp:87
+#: library/library.cpp:84
 msgid "Most played"
 msgstr ""
 
@@ -3355,7 +3359,7 @@ msgstr ""
 msgid "Move up"
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:224 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr ""
@@ -3413,7 +3417,7 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
-#: library/library.cpp:76
+#: library/library.cpp:74
 msgid "Never played"
 msgstr ""
 
@@ -3444,7 +3448,7 @@ msgstr ""
 msgid "New tracks will be added automatically."
 msgstr ""
 
-#: library/library.cpp:95
+#: library/library.cpp:92
 msgid "Newest tracks"
 msgstr ""
 
@@ -3457,7 +3461,7 @@ msgstr ""
 msgid "Next track"
 msgstr ""
 
-#: core/utilities.cpp:153
+#: core/utilities.cpp:152
 msgid "Next week"
 msgstr ""
 
@@ -3637,7 +3641,7 @@ msgstr ""
 msgid "Open OPML file..."
 msgstr ""
 
-#: transcoder/transcodedialog.cpp:239
+#: transcoder/transcodedialog.cpp:240
 msgid "Open a directory to import music from"
 msgstr ""
 
@@ -4297,7 +4301,7 @@ msgstr ""
 msgid "Rip"
 msgstr ""
 
-#: ripper/ripcddialog.cpp:94
+#: ripper/ripcddialog.cpp:95
 msgid "Rip CD"
 msgstr ""
 
@@ -4385,7 +4389,7 @@ msgstr ""
 msgid "Save this stream in the Internet tab"
 msgstr ""
 
-#: library/library.cpp:196
+#: library/library.cpp:193
 msgid "Saving songs statistics into songs files"
 msgstr ""
 
@@ -4893,7 +4897,7 @@ msgstr ""
 msgid "Starred"
 msgstr ""
 
-#: ripper/ripcddialog.cpp:68
+#: ripper/ripcddialog.cpp:69
 msgid "Start ripping"
 msgstr ""
 
@@ -5222,7 +5226,7 @@ msgid ""
 "Grooveshark songs"
 msgstr ""
 
-#: core/utilities.cpp:138 core/utilities.cpp:150
+#: core/utilities.cpp:137 core/utilities.cpp:149
 msgid "Today"
 msgstr ""
 
@@ -5246,7 +5250,7 @@ msgstr ""
 msgid "Toggle visibility for the pretty on-screen-display"
 msgstr ""
 
-#: core/utilities.cpp:151
+#: core/utilities.cpp:150
 msgid "Tomorrow"
 msgstr ""
 
@@ -5401,7 +5405,7 @@ msgstr "Actualisar iste podcast"
 msgid "Updating"
 msgstr "Actualisante"
 
-#: library/librarywatcher.cpp:94
+#: library/librarywatcher.cpp:92
 #, qt-format
 msgid "Updating %1"
 msgstr ""
@@ -5411,7 +5415,7 @@ msgstr ""
 msgid "Updating %1%..."
 msgstr ""
 
-#: library/librarywatcher.cpp:92
+#: library/librarywatcher.cpp:90
 msgid "Updating library"
 msgstr ""
 
@@ -5712,7 +5716,7 @@ msgstr ""
 msgid "Years"
 msgstr ""
 
-#: core/utilities.cpp:139
+#: core/utilities.cpp:138
 msgid "Yesterday"
 msgstr ""
 
