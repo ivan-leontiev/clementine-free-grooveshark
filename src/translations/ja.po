@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-03-02 11:57+0000\n"
+"PO-Revision-Date: 2015-03-27 15:10+0000\n"
 "Last-Translator: Clementine Buildbot <clementinebuildbot@davidsansome.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/clementine/language/ja/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,7 +454,7 @@ msgstr "別のストリームを追加..."
 msgid "Add directory..."
 msgstr "ディレクトリを追加..."
 
-#: ui/mainwindow.cpp:1830
+#: ui/mainwindow.cpp:1844
 msgid "Add file"
 msgstr "ファイルを追加"
 
@@ -474,7 +474,7 @@ msgstr "ファイルを追加..."
 msgid "Add files to transcode"
 msgstr "変換するファイルを追加"
 
-#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1871
 #: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr "フォルダーを追加"
@@ -599,7 +599,7 @@ msgstr "Spotify のプレイリストに追加する"
 msgid "Add to Spotify starred"
 msgstr ""
 
-#: ui/mainwindow.cpp:1651
+#: ui/mainwindow.cpp:1665
 msgid "Add to another playlist"
 msgstr "別のプレイリストに追加する"
 
@@ -773,6 +773,10 @@ msgstr "メインウィンドウを常に表示する"
 #: ../bin/src/ui_behavioursettingspage.h:304
 msgid "Always start playing"
 msgstr "常に再生を開始する"
+
+#: ../bin/src/ui_amazonsettingspage.h:103
+msgid "Amazon"
+msgstr ""
 
 #: internet/spotify/spotifyblobdownloader.cpp:67
 msgid ""
@@ -1033,7 +1037,7 @@ msgstr "参照..."
 msgid "Buffer duration"
 msgstr "バッファーの長さ"
 
-#: engines/gstengine.cpp:876
+#: engines/gstengine.cpp:873
 msgid "Buffering"
 msgstr "バッファ中"
 
@@ -1126,7 +1130,7 @@ msgstr "新しいエピソードのチェック"
 msgid "Check for updates"
 msgstr "更新の確認"
 
-#: ui/mainwindow.cpp:719
+#: ui/mainwindow.cpp:733
 msgid "Check for updates..."
 msgstr "更新のチェック..."
 
@@ -1138,7 +1142,7 @@ msgstr "Vk.com のキャッシュディレクトリーを選択する"
 msgid "Choose a name for your smart playlist"
 msgstr "スマートプレイリストの名前を選択してください"
 
-#: engines/gstengine.cpp:897
+#: engines/gstengine.cpp:894
 msgid "Choose automatically"
 msgstr "自動的に選択する"
 
@@ -1213,6 +1217,10 @@ msgid ""
 "a format that it can play."
 msgstr "Clementine はこのデバイスへコピーする際、このデバイスで再生可能な形式に自動で変換できます。"
 
+#: ../bin/src/ui_amazonsettingspage.h:104
+msgid "Clementine can play music that you have uploaded to Amazon Cloud Drive"
+msgstr ""
+
 #: ../bin/src/ui_boxsettingspage.h:104
 msgid "Clementine can play music that you have uploaded to Box"
 msgstr "Clementine は Box にアップロードしたミュージックを再生できます"
@@ -1273,6 +1281,7 @@ msgid "Click to toggle between remaining time and total time"
 msgstr "ここをクリックすると、残り時間と合計時間の表示を切り替えます"
 
 #: ../bin/src/ui_soundcloudsettingspage.h:107
+#: ../bin/src/ui_amazonsettingspage.h:106
 #: ../bin/src/ui_googledrivesettingspage.h:106
 #: ../bin/src/ui_dropboxsettingspage.h:106
 #: ../bin/src/ui_skydrivesettingspage.h:106
@@ -1370,7 +1379,7 @@ msgstr "VK.com の設定..."
 msgid "Configure global search..."
 msgstr "全体検索の設定..."
 
-#: ui/mainwindow.cpp:569
+#: ui/mainwindow.cpp:583
 msgid "Configure library..."
 msgstr "ライブラリの設定..."
 
@@ -1446,11 +1455,11 @@ msgid "Copy to clipboard"
 msgstr "クリップボードにコピー"
 
 #: library/libraryview.cpp:400 internet/podcasts/podcastservice.cpp:437
-#: ui/mainwindow.cpp:618 widgets/fileviewlist.cpp:43
+#: ui/mainwindow.cpp:632 widgets/fileviewlist.cpp:43
 msgid "Copy to device..."
 msgstr "デバイスへコピー..."
 
-#: devices/deviceview.cpp:225 ui/mainwindow.cpp:608
+#: devices/deviceview.cpp:225 ui/mainwindow.cpp:622
 #: widgets/fileviewlist.cpp:38
 msgid "Copy to library..."
 msgstr "ライブラリへコピー..."
@@ -1677,7 +1686,7 @@ msgstr "音量を下げる"
 msgid "Default background image"
 msgstr "既定の背景画像"
 
-#: engines/gstengine.cpp:922
+#: engines/gstengine.cpp:919
 #, qt-format
 msgid "Default device on %1"
 msgstr "デフォルトのデバイス %1"
@@ -1705,7 +1714,7 @@ msgid "Delete downloaded data"
 msgstr "ダウンロード済みデータを削除"
 
 #: devices/deviceview.cpp:404 library/libraryview.cpp:636
-#: ui/mainwindow.cpp:2193 widgets/fileview.cpp:186
+#: ui/mainwindow.cpp:2207 widgets/fileview.cpp:186
 msgid "Delete files"
 msgstr "ファイルの削除"
 
@@ -1713,7 +1722,7 @@ msgstr "ファイルの削除"
 msgid "Delete from device..."
 msgstr "デバイスから削除..."
 
-#: library/libraryview.cpp:402 ui/mainwindow.cpp:620
+#: library/libraryview.cpp:402 ui/mainwindow.cpp:634
 #: widgets/fileviewlist.cpp:44
 msgid "Delete from disk..."
 msgstr "ディスクから削除..."
@@ -1738,11 +1747,11 @@ msgstr "元のファイルを削除する"
 msgid "Deleting files"
 msgstr "ファイルの削除中"
 
-#: ui/mainwindow.cpp:1572
+#: ui/mainwindow.cpp:1586
 msgid "Dequeue selected tracks"
 msgstr "選択されたトラックをキューから削除する"
 
-#: ui/mainwindow.cpp:1570
+#: ui/mainwindow.cpp:1584
 msgid "Dequeue track"
 msgstr "トラックをキューから削除"
 
@@ -2009,7 +2018,7 @@ msgstr "ダイナミックランダムミックス"
 msgid "Edit smart playlist..."
 msgstr "スマートプレイリストの編集..."
 
-#: ui/mainwindow.cpp:1614
+#: ui/mainwindow.cpp:1628
 #, qt-format
 msgid "Edit tag \"%1\"..."
 msgstr "タグ「%1」を編集..."
@@ -2149,8 +2158,8 @@ msgstr "--log-levels *:3 と同じ"
 
 #: internet/grooveshark/groovesharkservice.cpp:1055
 #: internet/magnatune/magnatunedownloaddialog.cpp:242
-#: library/libraryview.cpp:630 ui/mainwindow.cpp:1896 ui/mainwindow.cpp:2143
-#: ui/mainwindow.cpp:2291 internet/vk/vkservice.cpp:625
+#: library/libraryview.cpp:630 ui/mainwindow.cpp:1910 ui/mainwindow.cpp:2157
+#: ui/mainwindow.cpp:2305 internet/vk/vkservice.cpp:625
 msgid "Error"
 msgstr "エラー"
 
@@ -2314,7 +2323,7 @@ msgstr "フェード"
 msgid "Fading duration"
 msgstr "フェードの長さ"
 
-#: ui/mainwindow.cpp:1897
+#: ui/mainwindow.cpp:1911
 msgid "Failed reading CD drive"
 msgstr "CD ドライブの読み込みが失敗しました"
 
@@ -2526,7 +2535,7 @@ msgstr "Full Bass + Treble"
 msgid "Full Treble"
 msgstr "Full Treble"
 
-#: ui/settingsdialog.cpp:138
+#: ui/settingsdialog.cpp:142
 msgid "General"
 msgstr "全般"
 
@@ -2842,7 +2851,7 @@ msgstr "整合性の検査"
 msgid "Internet"
 msgstr "インターネット"
 
-#: ui/settingsdialog.cpp:161
+#: ui/settingsdialog.cpp:165
 msgid "Internet providers"
 msgstr "インターネットプロバイダ"
 
@@ -3035,7 +3044,7 @@ msgstr "ライブラリ"
 msgid "Library advanced grouping"
 msgstr "ライブラリの高度なグループ化"
 
-#: ui/mainwindow.cpp:2415
+#: ui/mainwindow.cpp:2429
 msgid "Library rescan notice"
 msgstr "ライブラリー再スキャン通知"
 
@@ -3076,7 +3085,7 @@ msgstr "ディスクからカバーの読み込み"
 msgid "Load cover from disk..."
 msgstr "ディスクからカバーの読み込み..."
 
-#: playlist/playlistcontainer.cpp:286
+#: playlist/playlistcontainer.cpp:291
 msgid "Load playlist"
 msgstr "プレイリストの読み込み"
 
@@ -3131,6 +3140,7 @@ msgstr "ファイル・URL を読み込んで、現在のプレイリストを�
 #: ../bin/src/ui_soundcloudsettingspage.h:106
 #: ../bin/src/ui_spotifysettingspage.h:211
 #: ../bin/src/ui_subsonicsettingspage.h:130
+#: ../bin/src/ui_amazonsettingspage.h:105
 #: ../bin/src/ui_lastfmsettingspage.h:153
 #: ../bin/src/ui_googledrivesettingspage.h:105
 #: ../bin/src/ui_dropboxsettingspage.h:105
@@ -3355,7 +3365,7 @@ msgstr "マウントポイント"
 msgid "Move down"
 msgstr "下へ移動"
 
-#: ui/mainwindow.cpp:611 widgets/fileviewlist.cpp:40
+#: ui/mainwindow.cpp:625 widgets/fileviewlist.cpp:40
 msgid "Move to library..."
 msgstr "ライブラリへ移動..."
 
@@ -3364,7 +3374,7 @@ msgstr "ライブラリへ移動..."
 msgid "Move up"
 msgstr "上へ移動"
 
-#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1845
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr "ミュージック"
@@ -3437,7 +3447,7 @@ msgstr "再生を開始しない"
 msgid "New folder"
 msgstr "新しいフォルダー"
 
-#: ui/mainwindow.cpp:1668 ../bin/src/ui_mainwindow.h:691
+#: ui/mainwindow.cpp:1682 ../bin/src/ui_mainwindow.h:691
 msgid "New playlist"
 msgstr "新しいプレイリスト"
 
@@ -3486,7 +3496,7 @@ msgstr "エクスポートしたカバーはありません"
 msgid "No long blocks"
 msgstr "長いブロックなし"
 
-#: playlist/playlistcontainer.cpp:371
+#: playlist/playlistcontainer.cpp:376
 msgid ""
 "No matches found.  Clear the search box to show the whole playlist again."
 msgstr "見つかりません。再びプレイリスト全体を表示するには検索ボックスをクリアします。"
@@ -3500,7 +3510,7 @@ msgstr "短いブロックなし"
 msgid "None"
 msgstr "なし"
 
-#: library/libraryview.cpp:631 ui/mainwindow.cpp:2144 ui/mainwindow.cpp:2292
+#: library/libraryview.cpp:631 ui/mainwindow.cpp:2158 ui/mainwindow.cpp:2306
 msgid "None of the selected songs were suitable for copying to a device"
 msgstr "デバイスへのコピーに適切な曲が選択されていません"
 
@@ -3708,7 +3718,7 @@ msgstr "Opus"
 msgid "Organise Files"
 msgstr "ファイルの整理"
 
-#: library/libraryview.cpp:396 ui/mainwindow.cpp:614
+#: library/libraryview.cpp:396 ui/mainwindow.cpp:628
 msgid "Organise files..."
 msgstr "ファイルの整理..."
 
@@ -3770,7 +3780,7 @@ msgstr "パーティー"
 msgid "Password"
 msgstr "パスワード"
 
-#: core/globalshortcuts.cpp:50 ui/mainwindow.cpp:1030 ui/mainwindow.cpp:1481
+#: core/globalshortcuts.cpp:50 ui/mainwindow.cpp:1044 ui/mainwindow.cpp:1495
 #: ui/qtsystemtrayicon.cpp:175 wiimotedev/wiimotesettingspage.cpp:107
 msgid "Pause"
 msgstr "一時停止"
@@ -3796,8 +3806,8 @@ msgstr "ピクセル"
 msgid "Plain sidebar"
 msgstr "プレーンサイドバー"
 
-#: core/globalshortcuts.cpp:49 ui/mainwindow.cpp:586 ui/mainwindow.cpp:998
-#: ui/mainwindow.cpp:1016 ui/mainwindow.cpp:1484 ui/qtsystemtrayicon.cpp:164
+#: core/globalshortcuts.cpp:49 ui/mainwindow.cpp:600 ui/mainwindow.cpp:1012
+#: ui/mainwindow.cpp:1030 ui/mainwindow.cpp:1498 ui/qtsystemtrayicon.cpp:164
 #: ui/qtsystemtrayicon.cpp:188 ../bin/src/ui_mainwindow.h:642
 #: wiimotedev/wiimotesettingspage.cpp:100
 msgid "Play"
@@ -3832,7 +3842,7 @@ msgstr "再生"
 msgid "Player options"
 msgstr "プレーヤーのオプション"
 
-#: playlist/playlistcontainer.cpp:282 playlist/playlistlistcontainer.cpp:228
+#: playlist/playlistcontainer.cpp:287 playlist/playlistlistcontainer.cpp:228
 #: playlist/playlistmanager.cpp:87 playlist/playlistmanager.cpp:156
 #: playlist/playlistmanager.cpp:494 playlist/playlisttabbar.cpp:366
 msgid "Playlist"
@@ -4025,12 +4035,12 @@ msgstr "デバイスを照会しています..."
 msgid "Queue Manager"
 msgstr "キューマネージャー"
 
-#: ui/mainwindow.cpp:1576
+#: ui/mainwindow.cpp:1590
 msgid "Queue selected tracks"
 msgstr "選択されたトラックをキューに追加"
 
 #: globalsearch/globalsearchview.cpp:465 library/libraryview.cpp:380
-#: ui/mainwindow.cpp:1574
+#: ui/mainwindow.cpp:1588
 msgid "Queue track"
 msgstr "トラックをキューに追加"
 
@@ -4568,7 +4578,7 @@ msgstr "サーバーの詳細"
 msgid "Service offline"
 msgstr "サービスがオフラインです"
 
-#: ui/mainwindow.cpp:1613
+#: ui/mainwindow.cpp:1627
 #, qt-format
 msgid "Set %1 to \"%2\"..."
 msgstr "%1 を「%2」に設定します..."
@@ -4644,7 +4654,7 @@ msgstr "Pretty OSD を表示する"
 msgid "Show above status bar"
 msgstr "ステータスバーの上に表示"
 
-#: ui/mainwindow.cpp:554
+#: ui/mainwindow.cpp:568
 msgid "Show all songs"
 msgstr "すべての曲を表示する"
 
@@ -4668,12 +4678,12 @@ msgstr "原寸表示..."
 msgid "Show groups in global search result"
 msgstr "検索結果にグループを表示する"
 
-#: library/libraryview.cpp:413 ui/mainwindow.cpp:623
+#: library/libraryview.cpp:413 ui/mainwindow.cpp:637
 #: widgets/fileviewlist.cpp:51
 msgid "Show in file browser..."
 msgstr "ファイルブラウザーで表示..."
 
-#: ui/mainwindow.cpp:626
+#: ui/mainwindow.cpp:640
 msgid "Show in library..."
 msgstr "ライブラリーに表示..."
 
@@ -4685,11 +4695,11 @@ msgstr "さまざまなアーティストに表示"
 msgid "Show moodbar"
 msgstr "ムードバーを表示する"
 
-#: ui/mainwindow.cpp:556
+#: ui/mainwindow.cpp:570
 msgid "Show only duplicates"
 msgstr "重複するものだけ表示"
 
-#: ui/mainwindow.cpp:558
+#: ui/mainwindow.cpp:572
 msgid "Show only untagged"
 msgstr "タグのないものだけ表示"
 
@@ -4781,11 +4791,11 @@ msgstr "スキップ回数"
 msgid "Skip forwards in playlist"
 msgstr "プレイリストで前にスキップ"
 
-#: ui/mainwindow.cpp:1587
+#: ui/mainwindow.cpp:1601
 msgid "Skip selected tracks"
 msgstr "選択したトラックをスキップする"
 
-#: ui/mainwindow.cpp:1585
+#: ui/mainwindow.cpp:1599
 msgid "Skip track"
 msgstr "トラックをスキップする"
 
@@ -4944,7 +4954,7 @@ msgstr "停止"
 msgid "Stop after"
 msgstr "次で停止"
 
-#: ui/mainwindow.cpp:589 ../bin/src/ui_mainwindow.h:650
+#: ui/mainwindow.cpp:603 ../bin/src/ui_mainwindow.h:650
 msgid "Stop after this track"
 msgstr "このトラック後に停止"
 
@@ -5100,7 +5110,7 @@ msgid ""
 "license key. Visit subsonic.org for details."
 msgstr "Subsonic サーバーのお試し期間は終了しました。寄付してライセンスキーを取得してください。詳細は subsonic.org を参照してください。"
 
-#: ui/mainwindow.cpp:2406
+#: ui/mainwindow.cpp:2420
 msgid ""
 "The version of Clementine you've just updated to requires a full library "
 "rescan because of the new features listed below:"
@@ -5142,7 +5152,7 @@ msgid ""
 "continue?"
 msgstr "これらのファイルはデバイスから削除されます。続行してもよろしいですか?"
 
-#: library/libraryview.cpp:637 ui/mainwindow.cpp:2194 widgets/fileview.cpp:187
+#: library/libraryview.cpp:637 ui/mainwindow.cpp:2208 widgets/fileview.cpp:187
 msgid ""
 "These files will be permanently deleted from disk, are you sure you want to "
 "continue?"
@@ -5243,7 +5253,7 @@ msgstr "Pretty OSD の切り替え"
 msgid "Toggle fullscreen"
 msgstr "全画面表示の切り替え"
 
-#: ui/mainwindow.cpp:1578
+#: ui/mainwindow.cpp:1592
 msgid "Toggle queue status"
 msgstr "キュー状態の切り替え"
 
@@ -5365,11 +5375,11 @@ msgstr "不明なエラー"
 msgid "Unset cover"
 msgstr "カバーを未設定にする"
 
-#: ui/mainwindow.cpp:1583
+#: ui/mainwindow.cpp:1597
 msgid "Unskip selected tracks"
 msgstr "選択したトラックをスキップしない"
 
-#: ui/mainwindow.cpp:1581
+#: ui/mainwindow.cpp:1595
 msgid "Unskip track"
 msgstr "トラックをスキップしない"
 
@@ -5505,7 +5515,7 @@ msgstr "使用中"
 msgid "User %1 doesn't have a Grooveshark Anywhere account"
 msgstr "ユーザー %1 には Grooveshark Anywhere のアカウントがありません。"
 
-#: ui/settingsdialog.cpp:152
+#: ui/settingsdialog.cpp:156
 msgid "User interface"
 msgstr "ユーザーインターフェース"
 
@@ -5689,7 +5699,7 @@ msgid ""
 "well?"
 msgstr "このアルバムにある他の曲も さまざまなアーティスト に移動しますか?"
 
-#: ui/mainwindow.cpp:2413
+#: ui/mainwindow.cpp:2427
 msgid "Would you like to run a full rescan right now?"
 msgstr "全体の再スキャンを今すぐ実行しますか?"
 

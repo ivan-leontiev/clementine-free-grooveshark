@@ -15,7 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2015-03-02 11:57+0000\n"
+"PO-Revision-Date: 2015-03-27 15:10+0000\n"
 "Last-Translator: Clementine Buildbot <clementinebuildbot@davidsansome.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/clementine/language/ar/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -455,7 +455,7 @@ msgstr "إضافة Stream أخر"
 msgid "Add directory..."
 msgstr "أضف مجلد..."
 
-#: ui/mainwindow.cpp:1830
+#: ui/mainwindow.cpp:1844
 msgid "Add file"
 msgstr "أضف ملفا"
 
@@ -475,7 +475,7 @@ msgstr "أضافة ملف..."
 msgid "Add files to transcode"
 msgstr "أضف ملفات للتحويل"
 
-#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1857
+#: transcoder/transcodedialog.cpp:306 ui/mainwindow.cpp:1871
 #: ripper/ripcddialog.cpp:185
 msgid "Add folder"
 msgstr "إضافة مجلد"
@@ -600,7 +600,7 @@ msgstr ""
 msgid "Add to Spotify starred"
 msgstr ""
 
-#: ui/mainwindow.cpp:1651
+#: ui/mainwindow.cpp:1665
 msgid "Add to another playlist"
 msgstr "أضف إلى قائمة تشغيل أخرى"
 
@@ -774,6 +774,10 @@ msgstr "أظهر النافذة الرئيسية دائما"
 #: ../bin/src/ui_behavioursettingspage.h:304
 msgid "Always start playing"
 msgstr "ابدأ التشغيل دائما"
+
+#: ../bin/src/ui_amazonsettingspage.h:103
+msgid "Amazon"
+msgstr ""
 
 #: internet/spotify/spotifyblobdownloader.cpp:67
 msgid ""
@@ -1034,7 +1038,7 @@ msgstr "تصفح..."
 msgid "Buffer duration"
 msgstr "مدة التخزين المؤقت"
 
-#: engines/gstengine.cpp:876
+#: engines/gstengine.cpp:873
 msgid "Buffering"
 msgstr "تخزين مؤقت"
 
@@ -1127,7 +1131,7 @@ msgstr "التمس حلقات جديدة"
 msgid "Check for updates"
 msgstr ""
 
-#: ui/mainwindow.cpp:719
+#: ui/mainwindow.cpp:733
 msgid "Check for updates..."
 msgstr "التمس التحديثات"
 
@@ -1139,7 +1143,7 @@ msgstr "اختر مستار تخزين VK.com المؤقت"
 msgid "Choose a name for your smart playlist"
 msgstr "اختر اسما لقائمة التشغيل"
 
-#: engines/gstengine.cpp:897
+#: engines/gstengine.cpp:894
 msgid "Choose automatically"
 msgstr "اختيار تلقائي"
 
@@ -1214,6 +1218,10 @@ msgid ""
 "a format that it can play."
 msgstr "يمكن لكلمنتاين أن يحول تلقائيا المقاطع التي تنسخ لهذا الجهاز للصيغ التي يستطيع قرائتها."
 
+#: ../bin/src/ui_amazonsettingspage.h:104
+msgid "Clementine can play music that you have uploaded to Amazon Cloud Drive"
+msgstr ""
+
 #: ../bin/src/ui_boxsettingspage.h:104
 msgid "Clementine can play music that you have uploaded to Box"
 msgstr "يستطيع كلمنتاين تشغيل المقاطع التي رفعتها على Box"
@@ -1274,6 +1282,7 @@ msgid "Click to toggle between remaining time and total time"
 msgstr "اضغط للتبديل بين الوقت المتبقي والوقت الكلي."
 
 #: ../bin/src/ui_soundcloudsettingspage.h:107
+#: ../bin/src/ui_amazonsettingspage.h:106
 #: ../bin/src/ui_googledrivesettingspage.h:106
 #: ../bin/src/ui_dropboxsettingspage.h:106
 #: ../bin/src/ui_skydrivesettingspage.h:106
@@ -1371,7 +1380,7 @@ msgstr "ضبط VK.com..."
 msgid "Configure global search..."
 msgstr "إعدادات البحث العامة..."
 
-#: ui/mainwindow.cpp:569
+#: ui/mainwindow.cpp:583
 msgid "Configure library..."
 msgstr "إعدادات المكتبة"
 
@@ -1447,11 +1456,11 @@ msgid "Copy to clipboard"
 msgstr "نسخ إلى المكتبة..."
 
 #: library/libraryview.cpp:400 internet/podcasts/podcastservice.cpp:437
-#: ui/mainwindow.cpp:618 widgets/fileviewlist.cpp:43
+#: ui/mainwindow.cpp:632 widgets/fileviewlist.cpp:43
 msgid "Copy to device..."
 msgstr "نسخ إلى جهاز..."
 
-#: devices/deviceview.cpp:225 ui/mainwindow.cpp:608
+#: devices/deviceview.cpp:225 ui/mainwindow.cpp:622
 #: widgets/fileviewlist.cpp:38
 msgid "Copy to library..."
 msgstr "نسخ إلى المكتبة..."
@@ -1678,7 +1687,7 @@ msgstr "اخفض الصوت"
 msgid "Default background image"
 msgstr "صورة الخلفية الافتراضية"
 
-#: engines/gstengine.cpp:922
+#: engines/gstengine.cpp:919
 #, qt-format
 msgid "Default device on %1"
 msgstr "الجهاز الافتراضي 1%"
@@ -1706,7 +1715,7 @@ msgid "Delete downloaded data"
 msgstr "حذف البيانات المحملة"
 
 #: devices/deviceview.cpp:404 library/libraryview.cpp:636
-#: ui/mainwindow.cpp:2193 widgets/fileview.cpp:186
+#: ui/mainwindow.cpp:2207 widgets/fileview.cpp:186
 msgid "Delete files"
 msgstr "احذف الملفات"
 
@@ -1714,7 +1723,7 @@ msgstr "احذف الملفات"
 msgid "Delete from device..."
 msgstr "احذف من الجهاز"
 
-#: library/libraryview.cpp:402 ui/mainwindow.cpp:620
+#: library/libraryview.cpp:402 ui/mainwindow.cpp:634
 #: widgets/fileviewlist.cpp:44
 msgid "Delete from disk..."
 msgstr "احذف من القرص..."
@@ -1739,11 +1748,11 @@ msgstr "احذف الملفات الأصلية"
 msgid "Deleting files"
 msgstr "حذف الملفات"
 
-#: ui/mainwindow.cpp:1572
+#: ui/mainwindow.cpp:1586
 msgid "Dequeue selected tracks"
 msgstr "أزل المختارة من لائحة الانتظار"
 
-#: ui/mainwindow.cpp:1570
+#: ui/mainwindow.cpp:1584
 msgid "Dequeue track"
 msgstr "أزل المقطع من لائحة الانتظار"
 
@@ -2010,7 +2019,7 @@ msgstr "مزج عشوائي تلقائيا"
 msgid "Edit smart playlist..."
 msgstr "حرر قائمة التشغيل الذكية"
 
-#: ui/mainwindow.cpp:1614
+#: ui/mainwindow.cpp:1628
 #, qt-format
 msgid "Edit tag \"%1\"..."
 msgstr "حرر الوسم \"%1\""
@@ -2150,8 +2159,8 @@ msgstr "يكافئ --log-levels *:3"
 
 #: internet/grooveshark/groovesharkservice.cpp:1055
 #: internet/magnatune/magnatunedownloaddialog.cpp:242
-#: library/libraryview.cpp:630 ui/mainwindow.cpp:1896 ui/mainwindow.cpp:2143
-#: ui/mainwindow.cpp:2291 internet/vk/vkservice.cpp:625
+#: library/libraryview.cpp:630 ui/mainwindow.cpp:1910 ui/mainwindow.cpp:2157
+#: ui/mainwindow.cpp:2305 internet/vk/vkservice.cpp:625
 msgid "Error"
 msgstr "خطأ"
 
@@ -2315,7 +2324,7 @@ msgstr "تلاشي"
 msgid "Fading duration"
 msgstr "مدة التلاشي"
 
-#: ui/mainwindow.cpp:1897
+#: ui/mainwindow.cpp:1911
 msgid "Failed reading CD drive"
 msgstr "فشل في قراءة القرص CD"
 
@@ -2527,7 +2536,7 @@ msgstr "Full Bass + Treble"
 msgid "Full Treble"
 msgstr "Full Treble"
 
-#: ui/settingsdialog.cpp:138
+#: ui/settingsdialog.cpp:142
 msgid "General"
 msgstr "عام"
 
@@ -2843,7 +2852,7 @@ msgstr "فحص شامل"
 msgid "Internet"
 msgstr "انترنت"
 
-#: ui/settingsdialog.cpp:161
+#: ui/settingsdialog.cpp:165
 msgid "Internet providers"
 msgstr "خدمات الانترنت"
 
@@ -3036,7 +3045,7 @@ msgstr "المكتبة"
 msgid "Library advanced grouping"
 msgstr "إعدادات متقدمة لتجميع المكتبة"
 
-#: ui/mainwindow.cpp:2415
+#: ui/mainwindow.cpp:2429
 msgid "Library rescan notice"
 msgstr "إشعار إعادة فحص المكتبة"
 
@@ -3077,7 +3086,7 @@ msgstr "حمل الغلاف من القرص"
 msgid "Load cover from disk..."
 msgstr "تحميل الغلاف من القرص..."
 
-#: playlist/playlistcontainer.cpp:286
+#: playlist/playlistcontainer.cpp:291
 msgid "Load playlist"
 msgstr "تحميل قائمة تشغيل"
 
@@ -3132,6 +3141,7 @@ msgstr "تحميل ملفات/روابط، استبدال قائمة التشغ�
 #: ../bin/src/ui_soundcloudsettingspage.h:106
 #: ../bin/src/ui_spotifysettingspage.h:211
 #: ../bin/src/ui_subsonicsettingspage.h:130
+#: ../bin/src/ui_amazonsettingspage.h:105
 #: ../bin/src/ui_lastfmsettingspage.h:153
 #: ../bin/src/ui_googledrivesettingspage.h:105
 #: ../bin/src/ui_dropboxsettingspage.h:105
@@ -3356,7 +3366,7 @@ msgstr "نقط الوصل"
 msgid "Move down"
 msgstr "أسفل"
 
-#: ui/mainwindow.cpp:611 widgets/fileviewlist.cpp:40
+#: ui/mainwindow.cpp:625 widgets/fileviewlist.cpp:40
 msgid "Move to library..."
 msgstr "انقل إلى المكتبة"
 
@@ -3365,7 +3375,7 @@ msgstr "انقل إلى المكتبة"
 msgid "Move up"
 msgstr "أعلى"
 
-#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1831
+#: transcoder/transcodedialog.cpp:225 ui/mainwindow.cpp:1845
 #: internet/vk/vkservice.cpp:884
 msgid "Music"
 msgstr "موسيقى"
@@ -3438,7 +3448,7 @@ msgstr "لم يبدأ تشغيلها أبدا"
 msgid "New folder"
 msgstr "مجلد جديد"
 
-#: ui/mainwindow.cpp:1668 ../bin/src/ui_mainwindow.h:691
+#: ui/mainwindow.cpp:1682 ../bin/src/ui_mainwindow.h:691
 msgid "New playlist"
 msgstr "قائمة تشغيل جديدة"
 
@@ -3487,7 +3497,7 @@ msgstr "لا توجد أغلفة للتصدير."
 msgid "No long blocks"
 msgstr "بدون أجزاء طويلة"
 
-#: playlist/playlistcontainer.cpp:371
+#: playlist/playlistcontainer.cpp:376
 msgid ""
 "No matches found.  Clear the search box to show the whole playlist again."
 msgstr "لم يتم العثور على أي نتيجة. امسح خانة البحث لإظهار جميع قوائم التشغيل من جديد."
@@ -3501,7 +3511,7 @@ msgstr "بدون أجزاء قصيرة"
 msgid "None"
 msgstr "لا شيء"
 
-#: library/libraryview.cpp:631 ui/mainwindow.cpp:2144 ui/mainwindow.cpp:2292
+#: library/libraryview.cpp:631 ui/mainwindow.cpp:2158 ui/mainwindow.cpp:2306
 msgid "None of the selected songs were suitable for copying to a device"
 msgstr "لا مقطع من المقاطع المختارة مناسب لنسخه لجهاز."
 
@@ -3709,7 +3719,7 @@ msgstr "Opus"
 msgid "Organise Files"
 msgstr "ترتيب الملفات"
 
-#: library/libraryview.cpp:396 ui/mainwindow.cpp:614
+#: library/libraryview.cpp:396 ui/mainwindow.cpp:628
 msgid "Organise files..."
 msgstr "ترتيب الملفات..."
 
@@ -3771,7 +3781,7 @@ msgstr "حفلة"
 msgid "Password"
 msgstr "كلمة السر"
 
-#: core/globalshortcuts.cpp:50 ui/mainwindow.cpp:1030 ui/mainwindow.cpp:1481
+#: core/globalshortcuts.cpp:50 ui/mainwindow.cpp:1044 ui/mainwindow.cpp:1495
 #: ui/qtsystemtrayicon.cpp:175 wiimotedev/wiimotesettingspage.cpp:107
 msgid "Pause"
 msgstr "إيقاف مؤقت"
@@ -3797,8 +3807,8 @@ msgstr "بكسل"
 msgid "Plain sidebar"
 msgstr "شريط جانبي عريض"
 
-#: core/globalshortcuts.cpp:49 ui/mainwindow.cpp:586 ui/mainwindow.cpp:998
-#: ui/mainwindow.cpp:1016 ui/mainwindow.cpp:1484 ui/qtsystemtrayicon.cpp:164
+#: core/globalshortcuts.cpp:49 ui/mainwindow.cpp:600 ui/mainwindow.cpp:1012
+#: ui/mainwindow.cpp:1030 ui/mainwindow.cpp:1498 ui/qtsystemtrayicon.cpp:164
 #: ui/qtsystemtrayicon.cpp:188 ../bin/src/ui_mainwindow.h:642
 #: wiimotedev/wiimotesettingspage.cpp:100
 msgid "Play"
@@ -3833,7 +3843,7 @@ msgstr "التشغيل"
 msgid "Player options"
 msgstr "خيارات المشغل"
 
-#: playlist/playlistcontainer.cpp:282 playlist/playlistlistcontainer.cpp:228
+#: playlist/playlistcontainer.cpp:287 playlist/playlistlistcontainer.cpp:228
 #: playlist/playlistmanager.cpp:87 playlist/playlistmanager.cpp:156
 #: playlist/playlistmanager.cpp:494 playlist/playlisttabbar.cpp:366
 msgid "Playlist"
@@ -4026,12 +4036,12 @@ msgstr "الاستعلام عن الجهاز..."
 msgid "Queue Manager"
 msgstr "مدير لائحة الانتظار"
 
-#: ui/mainwindow.cpp:1576
+#: ui/mainwindow.cpp:1590
 msgid "Queue selected tracks"
 msgstr "أضف المختارة للائحة الانتظار"
 
 #: globalsearch/globalsearchview.cpp:465 library/libraryview.cpp:380
-#: ui/mainwindow.cpp:1574
+#: ui/mainwindow.cpp:1588
 msgid "Queue track"
 msgstr "أضف للائحة الانتظار"
 
@@ -4569,7 +4579,7 @@ msgstr "معلومات الخادم"
 msgid "Service offline"
 msgstr "خدمة غير متصلة"
 
-#: ui/mainwindow.cpp:1613
+#: ui/mainwindow.cpp:1627
 #, qt-format
 msgid "Set %1 to \"%2\"..."
 msgstr "غير %1 إلى %2"
@@ -4645,7 +4655,7 @@ msgstr "أظهر تنبيهات كلمنتاين"
 msgid "Show above status bar"
 msgstr "أظهر فوق شريط الحالة"
 
-#: ui/mainwindow.cpp:554
+#: ui/mainwindow.cpp:568
 msgid "Show all songs"
 msgstr "أظهر جميع المقاطع"
 
@@ -4669,12 +4679,12 @@ msgstr "أظهر الحجم الأصلي..."
 msgid "Show groups in global search result"
 msgstr "أظهر المجموعات في نتائج البحث الشامل"
 
-#: library/libraryview.cpp:413 ui/mainwindow.cpp:623
+#: library/libraryview.cpp:413 ui/mainwindow.cpp:637
 #: widgets/fileviewlist.cpp:51
 msgid "Show in file browser..."
 msgstr "أظهر في متصفح الملفات..."
 
-#: ui/mainwindow.cpp:626
+#: ui/mainwindow.cpp:640
 msgid "Show in library..."
 msgstr "أظهر في المكتبة..."
 
@@ -4686,11 +4696,11 @@ msgstr "أظهر في فنانين متنوعين"
 msgid "Show moodbar"
 msgstr "أظهر عارضة المزاج"
 
-#: ui/mainwindow.cpp:556
+#: ui/mainwindow.cpp:570
 msgid "Show only duplicates"
 msgstr "أظهر المقاطع المكررة فقط"
 
-#: ui/mainwindow.cpp:558
+#: ui/mainwindow.cpp:572
 msgid "Show only untagged"
 msgstr "أظهر المقطاع غير الموسومة فقط"
 
@@ -4782,11 +4792,11 @@ msgstr "تخطى العد"
 msgid "Skip forwards in playlist"
 msgstr "تجاهل اللاحق في قائمة التشغيل"
 
-#: ui/mainwindow.cpp:1587
+#: ui/mainwindow.cpp:1601
 msgid "Skip selected tracks"
 msgstr "تجاوز المسارات المختارة"
 
-#: ui/mainwindow.cpp:1585
+#: ui/mainwindow.cpp:1599
 msgid "Skip track"
 msgstr "تجاوز المسار"
 
@@ -4945,7 +4955,7 @@ msgstr "إيقاف"
 msgid "Stop after"
 msgstr "إيقاف بعد"
 
-#: ui/mainwindow.cpp:589 ../bin/src/ui_mainwindow.h:650
+#: ui/mainwindow.cpp:603 ../bin/src/ui_mainwindow.h:650
 msgid "Stop after this track"
 msgstr "أوقف بعد هذا المقطع"
 
@@ -5101,7 +5111,7 @@ msgid ""
 "license key. Visit subsonic.org for details."
 msgstr "لقد انتهت المدة التجريبية لخادم Subsonic. الرجاء التبرع للحصول على مفتاح رخصة. لمزيد من التفاصيل زر subsonic.org."
 
-#: ui/mainwindow.cpp:2406
+#: ui/mainwindow.cpp:2420
 msgid ""
 "The version of Clementine you've just updated to requires a full library "
 "rescan because of the new features listed below:"
@@ -5143,7 +5153,7 @@ msgid ""
 "continue?"
 msgstr "سيتم حذف هذه الملفات من الجهاز. هل أنت متأكد من رغبتك بالاستمرار؟"
 
-#: library/libraryview.cpp:637 ui/mainwindow.cpp:2194 widgets/fileview.cpp:187
+#: library/libraryview.cpp:637 ui/mainwindow.cpp:2208 widgets/fileview.cpp:187
 msgid ""
 "These files will be permanently deleted from disk, are you sure you want to "
 "continue?"
@@ -5244,7 +5254,7 @@ msgstr "بدّل تنبيهات كلمنتاين"
 msgid "Toggle fullscreen"
 msgstr "بدّل نمط ملء الشاشة"
 
-#: ui/mainwindow.cpp:1578
+#: ui/mainwindow.cpp:1592
 msgid "Toggle queue status"
 msgstr "بدّل حالة لائحة الانتظار"
 
@@ -5366,11 +5376,11 @@ msgstr "خطأ مجهول"
 msgid "Unset cover"
 msgstr "ألغ الغلاف"
 
-#: ui/mainwindow.cpp:1583
+#: ui/mainwindow.cpp:1597
 msgid "Unskip selected tracks"
 msgstr "إلغاء تجاوز المسارات المختارة"
 
-#: ui/mainwindow.cpp:1581
+#: ui/mainwindow.cpp:1595
 msgid "Unskip track"
 msgstr "إلغاء تجاوز المسار"
 
@@ -5506,7 +5516,7 @@ msgstr "مستعمل"
 msgid "User %1 doesn't have a Grooveshark Anywhere account"
 msgstr "المستخدم %1 لا يملك حساب Grooveshark Anywhere"
 
-#: ui/settingsdialog.cpp:152
+#: ui/settingsdialog.cpp:156
 msgid "User interface"
 msgstr "واجهة المستخدم"
 
@@ -5690,7 +5700,7 @@ msgid ""
 "well?"
 msgstr "هل ترغب بنقل المقاطع الأخرى في هذا الألبوم لفئة فنانون متنوعون؟"
 
-#: ui/mainwindow.cpp:2413
+#: ui/mainwindow.cpp:2427
 msgid "Would you like to run a full rescan right now?"
 msgstr "هل ترغب بالقيام بفحص شامل الآن؟"
 
