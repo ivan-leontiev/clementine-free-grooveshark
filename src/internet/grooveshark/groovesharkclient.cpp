@@ -21,7 +21,6 @@ const QString kSettingsGroup = "Grooveshark";
 const int GSClient::kCTokenTimeout = 600 * 1000;
 const int GSReply::kGSReplyTimeout = 20000;
 static const QString kGSMoreUrl = "https://grooveshark.com/more.php?%1";
-static const QString kPreloadUrl = "https://grooveshark.com/preload.php?getCommunicationToken=1&hash=/&%1";
 static const QString kGSHomeUrl = "http://grooveshark.com/";
 
 static const ClientPreset kMobileClient = {"mobileshark", 20120830,
@@ -75,45 +74,30 @@ void GSClient::SessionCreated(GSReply* reply) {
   QString result = reply->getResult().toString();
   session_ = result;
 
-  PreloadData();
+  RetrieveGSConfig();
 }
 
-void GSClient::PreloadData() {
+void GSClient::RetrieveGSConfig() {
   qLog(Debug) << Q_FUNC_INFO;
 
-  QNetworkRequest request(QUrl(kPreloadUrl.arg(QDateTime::currentDateTime().toTime_t())));
-  SetHeaders(request);
-
-  QNetworkReply* reply = network_->get(request);
-  NewClosure(reply, SIGNAL(finished()), this,
-             SLOT(DataPreloaded(QNetworkReply*)), reply);
+  GSReply* gsreply = Request("getGSConfig", QList<Param>(), false, SysRequestEventType);
+  NewClosure(gsreply, SIGNAL(Finished()), this,
+             SLOT(GSConfigRetrieved(GSReply*)), gsreply);
 }
 
-void GSClient::DataPreloaded(QNetworkReply* reply) {
-  QByteArray raw = reply->readAll();
+void GSClient::GSConfigRetrieved(GSReply* reply) {
+  reply->deleteLater();
 
-  QList<QByteArray> l = raw.split('\n');
-  if (l.isEmpty()) {
-    qLog(Error) << "Error getting preload data.";
-    emit Fault();
-  }
-
-  QByteArray result = l[0];
-  result = result.left(result.size() - 1).right(result.size() - 20);
-
-  QJson::Parser parser;
-  bool ok;
-
-  QVariantMap p_result = parser.parse(result, &ok).toMap();
-  if (!ok) {
-    qLog(Error) << "Error while parsing preload data.";
+  if (reply->hasError()) {
+    qLog(Error) << "Error while retrieving GSConfig: " << reply->getErrorMsg();
     emit Fault();
     return;
   }
 
-  ctoken_ = p_result["getCommunicationToken"].toString();
-  uuid_ = p_result["getGSConfig"].toMap()["uuid"].toString();
-  country_ = p_result["getGSConfig"].toMap()["country"].toMap();
+  QVariantMap result = reply->getResult().toMap();
+
+  // uuid_ = result["getGSConfig"].toMap()["uuid"].toString();
+  country_ = result["country"].toMap();
 
   emit Ok();
 }

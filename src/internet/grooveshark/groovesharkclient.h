@@ -103,13 +103,13 @@ signals:
  private slots:
   void makeRequest(GSRequest *request);
   void CreateSession();
-  void PreloadData();
+  void RetrieveGSConfig();
   void UpdateCommunicationToken();
   void AuthenticateAsAuthorizedUser();
   QNetworkReply* makeRequest(const QString& method,
                              const QVariantMap& parameters);
   void SessionCreated(GSReply* reply);
-  void DataPreloaded(QNetworkReply* reply);
+  void GSConfigRetrieved(GSReply* reply);
   void CommunicationTokenUpdated(GSReply* reply);
   void LoggedIn(GSReply* reply);
   void OnFault();
@@ -137,6 +137,7 @@ class GSReply : public QObject {
   QVariant getResult() const { return result_; }
   void setReply(QNetworkReply* reply);
   void setRequest(GSRequest* request);
+  QString getErrorMsg() const { return error_msg_; }
   void Cancel();
 
 signals:
