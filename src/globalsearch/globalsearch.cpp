@@ -29,7 +29,7 @@
 
 #include <algorithm>
 
-const int GlobalSearch::kDelayedSearchTimeoutMs = 200;
+const int GlobalSearch::kDelayedSearchTimeoutMs = 1000;
 const char* GlobalSearch::kSettingsGroup = "GlobalSearch";
 const int GlobalSearch::kMaxResultsPerEmission = 500;
 
