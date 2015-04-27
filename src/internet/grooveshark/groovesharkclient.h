@@ -59,6 +59,7 @@ class GSClient : public QObject {
                    bool auth_required = false);
   const QString& getSessionID() { return session_; }
   const QString& getUserID() { return user_id_; }
+  const QVariantMap& getCountry() { return country_; }
 
  public slots:
   void SetLoggedIn(bool b) { logged_in_ = b; }
@@ -70,6 +71,7 @@ signals:
   void LoginFinished(bool success);
   void Ok();
   void CTExpired();
+  void SessionExpired();
   void Fault();
 
  private:
@@ -90,6 +92,7 @@ signals:
   GSReply* Request(const QString method, const QList<Param> parameters,
                    bool auth_required, QEvent::Type type);
   void DecorateRequest(QNetworkRequest& request, QVariantMap& parameters);
+  void SetHeaders(QNetworkRequest& request);
   void SetupClient(QVariantMap& header, const QString& method,
                    const ClientPreset& client);
   QString CreateToken(const QString& method, const QString& salt);
@@ -100,11 +103,13 @@ signals:
  private slots:
   void makeRequest(GSRequest *request);
   void CreateSession();
+  void PreloadData();
   void UpdateCommunicationToken();
   void AuthenticateAsAuthorizedUser();
   QNetworkReply* makeRequest(const QString& method,
                              const QVariantMap& parameters);
   void SessionCreated(GSReply* reply);
+  void DataPreloaded(QNetworkReply* reply);
   void CommunicationTokenUpdated(GSReply* reply);
   void LoggedIn(GSReply* reply);
   void OnFault();

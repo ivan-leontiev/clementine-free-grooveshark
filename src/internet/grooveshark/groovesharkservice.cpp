@@ -296,7 +296,7 @@ QUrl GroovesharkService::GetStreamingUrlFromSongId(const QString& song_id,
   qLog(Debug) << Q_FUNC_INFO;
   QList<Param> parameters;
 
-  parameters << Param("songID", song_id) << Param("country", QVariantMap())
+  parameters << Param("songID", song_id) << Param("country", client_->getCountry())
              << Param("prefetch", false) << Param("type", 0)
              << Param("mobile", false);
   GSReply* reply = client_->Request("getStreamKeyFromSongIDEx", parameters);
@@ -1580,22 +1580,7 @@ bool GroovesharkService::WaitForGSReply(GSReply* reply) {
   QTimer timeout_timer;
   connect(&timeout_timer, SIGNAL(timeout()), &event_loop, SLOT(quit()));
   connect(reply, SIGNAL(Finished()), &event_loop, SLOT(quit()));
-  timeout_timer.start(10000);
-  event_loop.exec();
-  if (!timeout_timer.isActive()) {
-    qLog(Error) << "Grooveshark request timeout";
-    return false;
-  }
-  timeout_timer.stop();
-  return true;
-}
-
-bool GroovesharkService::WaitForReply(QNetworkReply* reply) {
-  QEventLoop event_loop;
-  QTimer timeout_timer;
-  connect(&timeout_timer, SIGNAL(timeout()), &event_loop, SLOT(quit()));
-  connect(reply, SIGNAL(finished()), &event_loop, SLOT(quit()));
-  timeout_timer.start(10000);
+  timeout_timer.start(15000);
   event_loop.exec();
   if (!timeout_timer.isActive()) {
     qLog(Error) << "Grooveshark request timeout";

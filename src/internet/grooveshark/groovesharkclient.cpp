@@ -3,6 +3,8 @@
 #include "core/logging.h"
 
 #include <QNetworkAccessManager>
+#include <QNetworkCookieJar>
+#include <QDateTime>
 #include <QStringList>
 #include <QSignalMapper>
 #include <QStateMachine>
@@ -19,12 +21,15 @@ const QString kSettingsGroup = "Grooveshark";
 const int GSClient::kCTokenTimeout = 600 * 1000;
 const int GSReply::kGSReplyTimeout = 20000;
 static const QString kGSMoreUrl = "https://grooveshark.com/more.php?%1";
+static const QString kPreloadUrl = "https://grooveshark.com/preload.php?getCommunicationToken=1&hash=/&%1";
 static const QString kGSHomeUrl = "http://grooveshark.com/";
 
 static const ClientPreset kMobileClient = {"mobileshark", 20120830,
                                            "gooeyFlubber"};
 
 static const ClientPreset kJSClient = {"jsqueue", 20130520, "nuggetsOfBaller"};
+
+static const ClientPreset kHtmlClient = {"htmlshark", 20130520, "nuggetsOfBaller"};
 
 GSClient::GSClient(QObject* parent)
     : QObject(parent),
@@ -38,6 +43,7 @@ GSClient::GSClient(QObject* parent)
   user_id_ = s.value("userID").toString();
   uuid_ = QUuid::createUuid().toString().mid(1, 36).toUpper();
 
+  network_->setCookieJar(new QNetworkCookieJar());
   SetLoggedIn(!user_id_.isEmpty());
 
   ctoken_timer_->setSingleShot(true);
@@ -49,11 +55,6 @@ GSClient::GSClient(QObject* parent)
 
 void GSClient::CreateSession() {
   qLog(Debug) << Q_FUNC_INFO;
-
-  if (!session_.isEmpty()) {
-    emit Ok();
-    return;
-  }
 
   GSReply* gsreply =
       Request("initiateSession", QList<Param>(), false, SysRequestEventType);
@@ -73,7 +74,46 @@ void GSClient::SessionCreated(GSReply* reply) {
 
   QString result = reply->getResult().toString();
   session_ = result;
-  qLog(Debug) << "session id: " << session_;
+
+  PreloadData();
+}
+
+void GSClient::PreloadData() {
+  qLog(Debug) << Q_FUNC_INFO;
+
+  QNetworkRequest request(QUrl(kPreloadUrl.arg(QDateTime::currentDateTime().toTime_t())));
+  SetHeaders(request);
+
+  QNetworkReply* reply = network_->get(request);
+  NewClosure(reply, SIGNAL(finished()), this,
+             SLOT(DataPreloaded(QNetworkReply*)), reply);
+}
+
+void GSClient::DataPreloaded(QNetworkReply* reply) {
+  QByteArray raw = reply->readAll();
+
+  QList<QByteArray> l = raw.split('\n');
+  if (l.isEmpty()) {
+    qLog(Error) << "Error getting preload data.";
+    emit Fault();
+  }
+
+  QByteArray result = l[0];
+  result = result.left(result.size() - 1).right(result.size() - 20);
+
+  QJson::Parser parser;
+  bool ok;
+
+  QVariantMap p_result = parser.parse(result, &ok).toMap();
+  if (!ok) {
+    qLog(Error) << "Error while parsing preload data.";
+    emit Fault();
+    return;
+  }
+
+  ctoken_ = p_result["getCommunicationToken"].toString();
+  uuid_ = p_result["getGSConfig"].toMap()["uuid"].toString();
+  country_ = p_result["getGSConfig"].toMap()["country"].toMap();
 
   emit Ok();
 }
@@ -120,7 +160,8 @@ void GSClient::AuthenticateAsAuthorizedUser() {
 }
 
 void GSClient::SetupSM() {
-  QState* s1 = new QState();  // idle
+  QState* s11 = new QState(); // idle
+  QState* s12 = new QState(); // ctoken expired
 
   QState* s2 = new QState();     // connecting group
   QState* s21 = new QState(s2);  // creating session
@@ -136,14 +177,19 @@ void GSClient::SetupSM() {
   QState* s321 = new QState(s32);  // not logged in
   QState* s322 = new QState(s32);  // logged in
 
-  //   idle group
-  DeferRequestTransition* s1_to_s2 = new DeferRequestTransition(this);
-  s1_to_s2->setTargetState(s2);
-  s1->addTransition(s1_to_s2);
+  // idle
+  DeferRequestTransition* s11_to_s2 = new DeferRequestTransition(this);
+  s11_to_s2->setTargetState(s2);
+  s11->addTransition(s11_to_s2);
+
+  // ctoken expired
+  DeferRequestTransition* s12_to_s2 = new DeferRequestTransition(this);
+  s12_to_s2->setTargetState(s22);
+  s12->addTransition(s12_to_s2);
 
   //  connecting group
   s2->setInitialState(s21);
-  s2->addTransition(this, SIGNAL(Fault()), s1);
+  s2->addTransition(this, SIGNAL(Fault()), s11);
 
   connect(s21, SIGNAL(entered()), this, SLOT(CreateSession()));
   s21->addTransition(this, SIGNAL(Ok()), s22);
@@ -156,8 +202,9 @@ void GSClient::SetupSM() {
   //  connected group
   s3->setInitialState(s3h);
   s3h->setDefaultState(s31);
-  s3->addTransition(ctoken_timer_, SIGNAL(timeout()), s1);
-  s3->addTransition(this, SIGNAL(CTExpired()), s1);
+  s3->addTransition(ctoken_timer_, SIGNAL(timeout()), s12);
+  s3->addTransition(this, SIGNAL(CTExpired()), s12);
+  s3->addTransition(this, SIGNAL(SessionExpired()), s11);
 
   RequestTransition* s3_req_nauth = new RequestTransition(this, false);
   s3->addTransition(s3_req_nauth);
@@ -194,13 +241,15 @@ void GSClient::SetupSM() {
       new LoginFinishedTransition(this, false, s322);
   s322_login_fault->setTargetState(s321);
 
-  sm_->addState(s1);
+  sm_->addState(s11);
+  sm_->addState(s12);
   sm_->addState(s2);
   sm_->addState(s3);
-  sm_->setInitialState(s1);
+  sm_->setInitialState(s11);
 
   QSignalMapper* mapper = new QSignalMapper();
-  connect(s1, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s11, SIGNAL(entered()), mapper, SLOT(map()));
+  connect(s12, SIGNAL(entered()), mapper, SLOT(map()));
   connect(s2, SIGNAL(entered()), mapper, SLOT(map()));
   connect(s3, SIGNAL(entered()), mapper, SLOT(map()));
   connect(s21, SIGNAL(entered()), mapper, SLOT(map()));
@@ -209,7 +258,8 @@ void GSClient::SetupSM() {
   connect(s32, SIGNAL(entered()), mapper, SLOT(map()));
   connect(s321, SIGNAL(entered()), mapper, SLOT(map()));
   connect(s322, SIGNAL(entered()), mapper, SLOT(map()));
-  mapper->setMapping(s1, "s1");
+  mapper->setMapping(s11, "s11");
+  mapper->setMapping(s12, "s12");
   mapper->setMapping(s2, "s2");
   mapper->setMapping(s3, "s3");
   mapper->setMapping(s21, "s21");
@@ -277,22 +327,31 @@ void GSClient::DecorateRequest(QNetworkRequest& request,
   QString method_name = parameters["method"].toString();
   QVariantMap header;
 
-  if (method_name == "getStreamKeyFromSongIDEx")
-    SetupClient(header, method_name, kMobileClient);
-  else
-    SetupClient(header, method_name, kJSClient);
+  SetupClient(header, method_name, kHtmlClient);
 
-  header.insert("country", QVariantMap());
+  header.insert("country", country_);
   header.insert("session", session_);
   header.insert("privacy", 0);
   header.insert("uuid", uuid_);
   parameters.insert("header", header);
 
-  request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-  request.setRawHeader("DNT", "1");
-  request.setRawHeader("X-Requested-With", "XMLHttpRequest");
+  SetHeaders(request);
+}
+
+void GSClient::SetHeaders(QNetworkRequest& request) {
   request.setRawHeader("Host", "grooveshark.com");
-  request.setRawHeader("Referer", "http://grooveshark.com");
+  request.setRawHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:40.0) Gecko/20100101 Firefox/40.0");
+  request.setRawHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+  request.setRawHeader("Accept-Language", "en-US,en;q=0.5");
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain; charset=UTF-8");
+  request.setRawHeader("X-Requested-With", "XMLHttpRequest");
+  request.setRawHeader("Referer", "http://grooveshark.com/");
+
+  request.setRawHeader("Origin", "http://grooveshark.com/");
+  request.setRawHeader("Connection", "keep-alive");
+  request.setRawHeader("Pragma", "no-cache");
+  request.setRawHeader("Cache-Control", "no-cache");
+  // request.setRawHeader("DNT", "1");
 }
 
 void GSClient::SetupClient(QVariantMap& header, const QString& method,
@@ -423,7 +482,7 @@ bool GSReply::ProcessReplyError(const QVariantMap& result) {
         else
           resend = true;
         client_->ClearSession();
-        emit client_->CTExpired();
+        emit client_->SessionExpired();
         break;
       case GSClient::Error_MustBeLoggedIn:
         SetError(error, fault["message"].toString());

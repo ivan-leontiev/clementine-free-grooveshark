@@ -223,9 +223,8 @@ signals:
   QStandardItem* CreatePlaylistItem(const QString& playlist_name,
                                     int playlist_id);
 
-  // Convenient function which block until 'reply' replies, or timeout after 10
+  // Convenient function which block until 'reply' replies, or timeout after 15
   // seconds. Returns false if reply has timeouted
-  bool WaitForReply(QNetworkReply* reply);
   bool WaitForGSReply(GSReply* reply);
   // Convenient function for extracting songs from grooveshark result. result
   // should be the "result" field of most Grooveshark replies
